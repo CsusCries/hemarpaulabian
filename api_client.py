@@ -1,4 +1,3 @@
-
 import requests
 
 BASE_URL = "https://hemarpaulabian.onrender.com"
@@ -35,9 +34,7 @@ def say_hello():
 
 # Step 8: Access one of your own Lab 4 endpoints (/favorite_food)
 def get_favorite_food():
-    cuisine = input("Enter a cuisine (or press Enter for default): ")
-    params = {"cuisine": cuisine} if cuisine else {}
-    response = requests.get(f"{BASE_URL}/favorite_food", params=params, timeout=60)
+    response = requests.get(f"{BASE_URL}/favorite_food", timeout=60)
 
     if response.status_code == 200:
         data = response.json()
