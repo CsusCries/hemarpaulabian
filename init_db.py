@@ -1,3 +1,4 @@
+
 import sqlite3
 
 conn = sqlite3.connect('students.db')
@@ -11,10 +12,16 @@ CREATE TABLE IF NOT EXISTS students (
     program TEXT NOT NULL,
     year INTEGER NOT NULL,
     section TEXT NOT NULL
-    )
-    ''')
+)
+''')
 
+# Remove existing sample records
 cursor.execute("DELETE FROM students")
+
+# Reset the auto-increment counter
+cursor.execute(
+    "DELETE FROM sqlite_sequence WHERE name = 'students'"
+)
 
 students = [
     ('2026-00123', 'Juan Dela Cruz', 'BSIT', 1, 'A'),
