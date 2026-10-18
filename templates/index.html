@@ -4,180 +4,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student API Interface</title>
+    <title>Student Information API</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: #f4f6f9;
-            color: #333;
+            margin: 0;
+            padding: 18px;
+            background: #f1f5f9;
+            color: #1e293b;
         }
 
-        h1, h2 {
-            color: #243b64;
+        header {
+            text-align: center;
+            margin-bottom: 22px;
         }
 
-        button {
-            padding: 9px 14px;
-            margin: 5px;
-            cursor: pointer;
-            background-color: #315b96;
-            color: white;
-            border: none;
-            border-radius: 4px;
+        header h1 {
+            margin-bottom: 8px;
+            color: #1d4ed8;
         }
 
-        button:hover {
-            background-color: #1d3f70;
+        header p {
+            color: #64748b;
+            margin: 0;
         }
 
-        input, select {
-            padding: 9px;
-            margin: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+        /* Three columns on desktop */
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            align-items: start;
         }
 
         .section {
-            margin-top: 20px;
-            padding: 18px;
             background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+            min-width: 0;
         }
 
-        #result,
-        #greeting,
-        #food-result,
-        #studentList,
-        #filterResult,
-        #searchByResult {
-            margin-top: 15px;
+        .section h2 {
+            font-size: 17px;
+            margin: 0 0 12px;
+            color: #1d4ed8;
+        }
+
+        .description {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        input, select, button {
+            width: 100%;
             padding: 10px;
+            margin: 5px 0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input, select {
+            border: 1px solid #cbd5e1;
+            background: white;
+        }
+
+        button {
+            border: none;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            min-height: 38px;
             overflow-wrap: anywhere;
         }
 
+        .result:empty {
+            display: none;
+        }
+
         .student-card {
-            padding: 12px;
-            margin: 10px 0;
-            background: #f0f5ff;
-            border-left: 4px solid #315b96;
-            border-radius: 4px;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid #2563eb;
+            border-radius: 6px;
+            padding: 10px;
+            margin: 8px 0;
+            font-size: 13px;
         }
 
-        .filter-row {
-            margin: 10px 0;
+        .student-card h3 {
+            margin: 0 0 8px;
+            font-size: 15px;
         }
 
-        hr {
-            border: 0;
-            border-top: 1px solid #ddd;
-            margin: 25px 0;
+        .student-card p {
+            margin: 5px 0;
+        }
+
+        .status {
+            color: #475569;
+            font-size: 13px;
+        }
+
+        .error {
+            color: #b91c1c;
+        }
+
+        .success {
+            color: #166534;
+        }
+
+        .wide {
+            grid-column: span 2;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 0 5px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        /* Tablet */
+        @media (max-width: 1050px) {
+            .api-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .wide {
+                grid-column: span 2;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 650px) {
+            body {
+                padding: 12px;
+            }
+
+            .api-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .wide {
+                grid-column: span 1;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <h1>Student API Interface</h1>
+<header>
+    <h1>Student Information API</h1>
+    <p>Flask API Demonstration and Database Search</p>
+</header>
 
-    <!-- Student Information API -->
-    <div class="section">
-        <h2>Student Information API</h2>
-        <button onclick="loadStudent()">Load Student Information</button>
-        <div id="result"></div>
-    </div>
+<main class="api-grid">
 
-    <!-- Greeting API -->
-    <div class="section">
-        <h2>Greeting API</h2>
-        <input
-            type="text"
-            id="nameInput"
-            placeholder="Enter your first name"
-        >
+    <!-- 1. Student Information API -->
+    <section class="section">
+        <h2>1. Student Information API</h2>
+        <p class="description">Display the sample student information.</p>
+
+        <button onclick="loadStudent()">Load Student</button>
+        <div id="studentResult" class="result"></div>
+    </section>
+
+    <!-- 2. Greeting API -->
+    <section class="section">
+        <h2>2. Greeting API</h2>
+        <p class="description">Enter a name to receive a greeting.</p>
+
+        <input type="text" id="nameInput" placeholder="Enter your name">
         <button onclick="sayHello()">Say Hello</button>
-        <p id="greeting"></p>
-    </div>
+        <div id="helloResult" class="result"></div>
+    </section>
 
-    <!-- Favorite Food API -->
-    <div class="section">
-        <h2>Favorite Food API</h2>
-        <input
-            type="text"
-            id="cuisineInput"
-            placeholder="Enter a cuisine (e.g. Japanese)"
-        >
-        <button onclick="loadFavoriteFood()">Get Favorite Food</button>
-        <div id="food-result"></div>
-    </div>
+    <!-- 3. Favorite Food API -->
+    <section class="section">
+        <h2>3. Favorite Food API</h2>
+        <p class="description">Enter a cuisine preference.</p>
 
-    <!-- All Students from Database -->
-    <div class="section">
-        <h2>Students from Database</h2>
+        <input type="text" id="cuisineInput" placeholder="Enter cuisine">
+        <button onclick="loadFavoriteFood()">Show Favorite Food</button>
+        <div id="foodResult" class="result"></div>
+    </section>
+
+    <!-- 4. Hobbies API -->
+    <section class="section">
+        <h2>4. Hobbies API</h2>
+        <p class="description">Display the sample hobbies information.</p>
+
+        <button onclick="loadHobbies()">Load Hobbies</button>
+        <div id="hobbiesResult" class="result"></div>
+    </section>
+
+    <!-- 5. All Database Students -->
+    <section class="section">
+        <h2>5. Students from Database</h2>
+        <p class="description">Retrieve all records from the students table.</p>
+
         <button onclick="loadStudents()">Load All Students</button>
-        <div id="studentList"></div>
-    </div>
+        <div id="studentsResult" class="result"></div>
+    </section>
 
-    <!-- Filter Students -->
-    <div class="section">
-        <h2>Filter Students</h2>
-        <p>Display students according to their program, year level, or section.</p>
+    <!-- 6. Filter Students -->
+    <section class="section">
+        <h2>6. Filter Students</h2>
+        <p class="description">Search database records by program, year, or section.</p>
 
-        <!-- Item 18 -->
-        <div class="filter-row">
-            <h3>18. Students by Program</h3>
+        <label for="programFilter">Program</label>
+        <select id="programFilter">
+            <option value="">Select Program</option>
+            <option value="BSIT">BSIT</option>
+            <option value="BSCS">BSCS</option>
+        </select>
+        <button onclick="filterByProgram()">Search by Program</button>
 
-            <select id="programFilter">
-                <option value="BSIT">BSIT</option>
-                <option value="BSCS">BSCS</option>
-            </select>
+        <label for="yearFilter">Year Level</label>
+        <select id="yearFilter">
+            <option value="">Select Year</option>
+            <option value="1">1st Year</option>
+            <option value="2">2nd Year</option>
+            <option value="3">3rd Year</option>
+            <option value="4">4th Year</option>
+        </select>
+        <button onclick="filterByYear()">Search by Year</button>
 
-            <button onclick="filterByProgram()">Search Program</button>
-        </div>
+        <label for="sectionFilter">Section</label>
+        <select id="sectionFilter">
+            <option value="">Select Section</option>
+            <option value="A">Section A</option>
+            <option value="B">Section B</option>
+        </select>
+        <button onclick="filterBySection()">Search by Section</button>
 
-        <hr>
+        <div id="filterResult" class="result"></div>
+    </section>
 
-        <!-- Item 19 -->
-        <div class="filter-row">
-            <h3>19. Students by Year Level</h3>
-
-            <select id="yearFilter">
-                <option value="1">1st Year</option>
-                <option value="2">2nd Year</option>
-                <option value="3">3rd Year</option>
-                <option value="4">4th Year</option>
-            </select>
-
-            <button onclick="filterByYear()">Search Year</button>
-        </div>
-
-        <hr>
-
-        <!-- Item 20 -->
-        <div class="filter-row">
-            <h3>20. Students by Section</h3>
-
-            <select id="sectionFilter">
-                <option value="A">Section A</option>
-                <option value="B">Section B</option>
-                <option value="C">Section C</option>
-            </select>
-
-            <button onclick="filterBySection()">Search Section</button>
-        </div>
-
-        <div id="filterResult"></div>
-    </div>
-
-    <!-- Item 27: Additional Database API Endpoint -->
-    <div class="section">
-        <h2>27. Search Student by Database ID</h2>
-
-        <p>Enter a student's database ID to retrieve the student's information.</p>
+    <!-- Item 27: Additional Database Endpoint -->
+    <section class="section">
+        <h2>27. Search by Database ID</h2>
+        <p class="description">
+            Enter a database ID to retrieve one specific student.
+        </p>
 
         <input
             type="number"
@@ -187,217 +278,282 @@
         >
 
         <button onclick="searchStudentById()">Search Student</button>
+        <div id="searchByResult" class="result"></div>
+    </section>
 
-        <div id="searchByResult"></div>
-    </div>
+</main>
 
-    <script>
-        // Load one sample student
-        function loadStudent() {
-            fetch('/student')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('result').innerHTML =
-                        '<p><b>Student ID:</b> ' + data.student_id + '</p>' +
-                        '<p><b>Name:</b> ' + data.name + '</p>' +
-                        '<p><b>Program:</b> ' + data.program + '</p>' +
-                        '<p><b>Year:</b> ' + data.year + '</p>' +
-                        '<p><b>Section:</b> ' + data.section + '</p>';
-                })
-                .catch(() => {
-                    document.getElementById('result').textContent =
-                        'Unable to retrieve data.';
-                });
+<footer>
+    Student Information API | Flask and SQLite Database
+</footer>
+
+<script>
+    // Display a student or a list of students safely.
+    function displayStudents(data, elementId) {
+        const container = document.getElementById(elementId);
+        container.replaceChildren();
+
+        if (!Array.isArray(data)) {
+            data = [data];
         }
 
-        // Greeting API
-        function sayHello() {
-            const name = document.getElementById('nameInput').value;
-
-            fetch('/hello?name=' + encodeURIComponent(name))
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('greeting').textContent =
-                        data.message;
-                })
-                .catch(() => {
-                    document.getElementById('greeting').textContent =
-                        'Unable to retrieve greeting.';
-                });
+        if (data.length === 0) {
+            container.textContent = "No student records found.";
+            return;
         }
 
-        // Favorite Food API
-        function loadFavoriteFood() {
-            const cuisine =
-                document.getElementById('cuisineInput').value;
+        data.forEach(student => {
+            const card = document.createElement("div");
+            card.className = "student-card";
 
-            fetch('/favorite_food?cuisine=' + encodeURIComponent(cuisine))
-                .then(response => response.json())
-                .then(data => {
-                    const container = document.getElementById('food-result');
-                    container.replaceChildren();
+            const title = document.createElement("h3");
+            title.textContent = student.name || "Student";
+            card.appendChild(title);
 
-                    const details = [
-                        ['Preferred Cuisine', data.preferred_cuisine],
-                        ['Favorite Dish', data.favorite_dish],
-                        ['Restaurant', data.restaurant],
-                        ['Rating', data.rating + '/5']
-                    ];
+            const fields = [
+                ["Database ID", student.id],
+                ["Student ID", student.student_id],
+                ["Name", student.name],
+                ["Program", student.program],
+                ["Year", student.year],
+                ["Section", student.section]
+            ];
 
-                    details.forEach(([label, value]) => {
-                        const p = document.createElement('p');
-                        const b = document.createElement('b');
-                        b.textContent = label + ': ';
-                        p.appendChild(b);
-                        p.appendChild(document.createTextNode(value));
-                        container.appendChild(p);
-                    });
-                })
-                .catch(() => {
-                    document.getElementById('food-result').textContent =
-                        'Unable to retrieve favorite food.';
-                });
+            fields.forEach(([label, value]) => {
+                if (value !== undefined && value !== null) {
+                    const paragraph = document.createElement("p");
+                    const strong = document.createElement("strong");
+                    strong.textContent = label + ": ";
+                    paragraph.appendChild(strong);
+                    paragraph.appendChild(
+                        document.createTextNode(String(value))
+                    );
+                    card.appendChild(paragraph);
+                }
+            });
+
+            container.appendChild(card);
+        });
+    }
+
+    // Helper for API requests.
+    async function fetchJSON(url) {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Request failed.");
         }
 
-        // Display student records safely
-        function displayStudents(data, elementId) {
-            const container = document.getElementById(elementId);
+        return data;
+    }
+
+    // 1. Load sample student information.
+    async function loadStudent() {
+        const container = document.getElementById("studentResult");
+        container.textContent = "Loading...";
+
+        try {
+            const data = await fetchJSON("/student");
             container.replaceChildren();
 
-            if (!Array.isArray(data)) {
-                container.textContent =
-                    data.error || 'Unable to retrieve student records.';
-                return;
-            }
-
-            if (data.length === 0) {
-                container.textContent = 'No students found.';
-                return;
-            }
-
-            data.forEach(student => {
-                const card = document.createElement('div');
-                card.className = 'student-card';
-
-                const details = [
-                    ['Database ID', student.id],
-                    ['Student ID', student.student_id],
-                    ['Name', student.name],
-                    ['Program', student.program],
-                    ['Year', student.year],
-                    ['Section', student.section]
-                ];
-
-                details.forEach(([label, value]) => {
-                    const p = document.createElement('p');
-                    const b = document.createElement('b');
-
-                    b.textContent = label + ': ';
-                    p.appendChild(b);
-                    p.appendChild(
-                        document.createTextNode(
-                            value == null ? '' : String(value)
-                        )
-                    );
-
-                    card.appendChild(p);
-                });
-
-                container.appendChild(card);
+            Object.entries(data).forEach(([key, value]) => {
+                const line = document.createElement("p");
+                const label = document.createElement("strong");
+                label.textContent = key.replaceAll("_", " ") + ": ";
+                line.appendChild(label);
+                line.appendChild(document.createTextNode(String(value)));
+                container.appendChild(line);
             });
+        } catch (error) {
+            container.textContent = error.message;
         }
+    }
 
-        // Load all students
-        function loadStudents() {
-            const container = document.getElementById('studentList');
-            container.textContent = 'Loading students...';
+    // 2. Greeting API.
+    async function sayHello() {
+        const name = document.getElementById("nameInput").value.trim();
+        const container = document.getElementById("helloResult");
 
-            fetch('/students')
-                .then(response => response.json())
-                .then(data => displayStudents(data, 'studentList'))
-                .catch(() => {
-                    container.textContent =
-                        'Unable to retrieve student records.';
-                });
-        }
+        container.textContent = "Loading...";
 
-        // Item 18: Filter by program
-        function filterByProgram() {
-            const program =
-                document.getElementById('programFilter').value;
-
-            filterStudents(
-                '/students/program/' + encodeURIComponent(program)
+        try {
+            const data = await fetchJSON(
+                "/hello?name=" + encodeURIComponent(name || "Student")
             );
+            container.textContent = data.message;
+        } catch (error) {
+            container.textContent = error.message;
         }
+    }
 
-        // Item 19: Filter by year level
-        function filterByYear() {
-            const year = document.getElementById('yearFilter').value;
+    // 3. Favorite Food API.
+    async function loadFavoriteFood() {
+        const cuisine =
+            document.getElementById("cuisineInput").value.trim();
+        const container = document.getElementById("foodResult");
 
-            filterStudents('/students/year/' + year);
-        }
+        container.textContent = "Loading...";
 
-        // Item 20: Filter by section
-        function filterBySection() {
-            const section =
-                document.getElementById('sectionFilter').value;
-
-            filterStudents(
-                '/students/section/' + encodeURIComponent(section)
+        try {
+            const data = await fetchJSON(
+                "/favorite_food?cuisine=" +
+                encodeURIComponent(cuisine || "Filipino")
             );
+
+            container.replaceChildren();
+
+            Object.entries(data).forEach(([key, value]) => {
+                const line = document.createElement("p");
+                const label = document.createElement("strong");
+                label.textContent = key.replaceAll("_", " ") + ": ";
+                line.appendChild(label);
+                line.appendChild(document.createTextNode(String(value)));
+                container.appendChild(line);
+            });
+        } catch (error) {
+            container.textContent = error.message;
+        }
+    }
+
+    // 4. Hobbies API.
+    async function loadHobbies() {
+        const container = document.getElementById("hobbiesResult");
+        container.textContent = "Loading...";
+
+        try {
+            const data = await fetchJSON("/hobbies");
+            container.replaceChildren();
+
+            Object.entries(data).forEach(([key, value]) => {
+                const line = document.createElement("p");
+                const label = document.createElement("strong");
+                label.textContent = key.replaceAll("_", " ") + ": ";
+
+                line.appendChild(label);
+                line.appendChild(
+                    document.createTextNode(
+                        Array.isArray(value) ? value.join(", ") : String(value)
+                    )
+                );
+                container.appendChild(line);
+            });
+        } catch (error) {
+            container.textContent = error.message;
+        }
+    }
+
+    // 5. Load every student from SQLite.
+    async function loadStudents() {
+        const container = document.getElementById("studentsResult");
+        container.textContent = "Loading students...";
+
+        try {
+            const data = await fetchJSON("/students");
+            displayStudents(data, "studentsResult");
+        } catch (error) {
+            container.textContent = error.message;
+        }
+    }
+
+    // 6a. Search by program.
+    async function filterByProgram() {
+        const program = document.getElementById("programFilter").value;
+        const container = document.getElementById("filterResult");
+
+        if (!program) {
+            container.textContent = "Please select a program.";
+            return;
         }
 
-        // Fetch and display filtered students
-        function filterStudents(url) {
-            const container = document.getElementById('filterResult');
-            container.textContent = 'Loading students...';
+        container.textContent = "Searching...";
 
-            fetch(url)
-                .then(response => response.json())
-                .then(data => displayStudents(data, 'filterResult'))
-                .catch(() => {
-                    container.textContent =
-                        'Unable to retrieve filtered students.';
-                });
+        try {
+            const data = await fetchJSON(
+                "/students/program/" + encodeURIComponent(program)
+            );
+            displayStudents(data, "filterResult");
+        } catch (error) {
+            container.textContent = error.message;
+        }
+    }
+
+    // 6b. Search by year level.
+    async function filterByYear() {
+        const year = document.getElementById("yearFilter").value;
+        const container = document.getElementById("filterResult");
+
+        if (!year) {
+            container.textContent = "Please select a year level.";
+            return;
         }
 
-        // Item 27: Search student by database ID
-        function searchStudentById() {
-            const id =
-                document.getElementById('searchStudentId').value;
+        container.textContent = "Searching...";
 
-            const container =
-                document.getElementById('searchByResult');
+        try {
+            const data = await fetchJSON(
+                "/students/year/" + encodeURIComponent(year)
+            );
+            displayStudents(data, "filterResult");
+        } catch (error) {
+            container.textContent = error.message;
+        }
+    }
 
-            if (!id || !Number.isInteger(Number(id)) || Number(id) < 1) {
-                container.textContent =
-                    'Please enter a valid database ID.';
-                return;
+    // 6c. Search by section.
+    async function filterBySection() {
+        const section = document.getElementById("sectionFilter").value;
+        const container = document.getElementById("filterResult");
+
+        if (!section) {
+            container.textContent = "Please select a section.";
+            return;
+        }
+
+        container.textContent = "Searching...";
+
+        try {
+            const data = await fetchJSON(
+                "/students/section/" + encodeURIComponent(section)
+            );
+            displayStudents(data, "filterResult");
+        } catch (error) {
+            container.textContent = error.message;
+        }
+    }
+
+    // Item 27: Search for one student by database ID.
+    async function searchStudentById() {
+        const id = document.getElementById("searchStudentId").value.trim();
+        const container = document.getElementById("searchByResult");
+
+        if (!id || !Number.isInteger(Number(id)) || Number(id) < 1) {
+            container.textContent = "Please enter a valid database ID.";
+            return;
+        }
+
+        container.textContent = "Searching for student...";
+
+        try {
+            const student = await fetchJSON(
+                "/student/" + encodeURIComponent(id)
+            );
+            displayStudents([student], "searchByResult");
+        } catch (error) {
+            container.textContent = error.message;
+        }
+    }
+
+    // Press Enter to search for a database ID.
+    document.getElementById("searchStudentId").addEventListener(
+        "keydown",
+        function(event) {
+            if (event.key === "Enter") {
+                searchStudentById();
             }
-
-            container.textContent = 'Searching for student...';
-
-            fetch('/student/' + encodeURIComponent(id))
-                .then(async response => {
-                    const data = await response.json();
-
-                    if (!response.ok) {
-                        throw new Error(
-                            data.error || 'Student not found.'
-                        );
-                    }
-
-                    return data;
-                })
-                .then(student => {
-                    displayStudents([student], 'searchByResult');
-                })
-                .catch(error => {
-                    container.textContent = error.message;
-                });
         }
-    </script>
+    );
+</script>
 
 </body>
 </html>
