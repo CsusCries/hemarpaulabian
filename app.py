@@ -16,6 +16,7 @@ def home():
     return render_template('index.html')
 
 
+# Original Student API
 @app.route('/student')
 def get_student():
     return jsonify({
@@ -35,7 +36,7 @@ def say_hello():
     })
 
 
-# ENDPOINT 1: Favorite food
+# Favorite Food API
 @app.route('/favorite_food')
 def get_favorite_food():
     cuisine = request.args.get('cuisine', 'Filipino')
@@ -47,7 +48,7 @@ def get_favorite_food():
     })
 
 
-# ENDPOINT 2: Hobbies
+# Hobbies API
 @app.route('/hobbies')
 def get_hobbies():
     return jsonify({
@@ -70,9 +71,24 @@ def get_students():
     return jsonify([dict(student) for student in students])
 
 
-# Display one student by database ID
+# Display one student using /students/1
 @app.route('/students/<int:id>')
 def get_student_by_id(id):
+    conn = get_db_connection()
+    student = conn.execute(
+        'SELECT * FROM students WHERE id = ?', (id,)
+    ).fetchone()
+    conn.close()
+
+    if student is None:
+        return jsonify({"error": "Student not found"}), 404
+
+    return jsonify(dict(student))
+
+
+# Display one student using /student/1
+@app.route('/student/<int:id>')
+def get_student_by_id_singular(id):
     conn = get_db_connection()
     student = conn.execute(
         'SELECT * FROM students WHERE id = ?', (id,)
@@ -90,7 +106,7 @@ def get_student_by_id(id):
 def get_students_by_program(program):
     conn = get_db_connection()
     students = conn.execute(
-        'SELECT * FROM students WHERE program = ?',
+        'SELECT * FROM students WHERE UPPER(program) = ?',
         (program.upper(),)
     ).fetchall()
     conn.close()
@@ -116,7 +132,7 @@ def get_students_by_year(year):
 def get_students_by_section(section):
     conn = get_db_connection()
     students = conn.execute(
-        'SELECT * FROM students WHERE section = ?',
+        'SELECT * FROM students WHERE UPPER(section) = ?',
         (section.upper(),)
     ).fetchall()
     conn.close()
