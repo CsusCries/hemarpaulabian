@@ -1,56 +1,168 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student API Interface</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 700px;
+            max-width: 800px;
             margin: 40px auto;
             padding: 20px;
+            background-color: #f4f6f9;
+            color: #333;
+        }
+
+        h1, h2 {
+            color: #243b64;
         }
 
         button {
-            padding: 8px 14px;
+            padding: 9px 14px;
             margin: 5px;
             cursor: pointer;
+            background-color: #315b96;
+            color: white;
+            border: none;
+            border-radius: 4px;
         }
 
-        input {
-            padding: 8px;
+        button:hover {
+            background-color: #1d3f70;
         }
 
-        #result {
+        input, select {
+            padding: 9px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .section {
             margin-top: 20px;
+            padding: 18px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        #result, #greeting, #food-result,
+        #studentList, #filterResult {
+            margin-top: 15px;
             padding: 10px;
-            border: 1px solid #cccccc;
+            overflow-wrap: anywhere;
+        }
+
+        .student-card {
+            padding: 12px;
+            margin: 10px 0;
+            background: #f0f5ff;
+            border-left: 4px solid #315b96;
+            border-radius: 4px;
+        }
+
+        .message {
+            color: #666;
+        }
+
+        .filter-row {
+            margin: 10px 0;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #ddd;
+            margin: 25px 0;
         }
     </style>
 </head>
+
 <body>
+
     <h1>Student API Interface</h1>
 
-    <button onclick="loadStudent()">Load Student Information</button>
-    <div id="result"></div>
+    <!-- Student Information -->
+    <div class="section">
+        <h2>Student Information API</h2>
+        <button onclick="loadStudent()">Load Student Information</button>
+        <div id="result"></div>
+    </div>
 
-    <hr>
-    <h2>Greeting API</h2>
+    <!-- Greeting API -->
+    <div class="section">
+        <h2>Greeting API</h2>
+        <input type="text" id="nameInput"
+               placeholder="Enter your first name">
+        <button onclick="sayHello()">Say Hello</button>
+        <p id="greeting"></p>
+    </div>
 
-    <input type="text" id="nameInput" placeholder="Enter your first name">
-    <button onclick="sayHello()">Say Hello</button>
+    <!-- Favorite Food API -->
+    <div class="section">
+        <h2>Favorite Food API</h2>
+        <input type="text" id="cuisineInput"
+               placeholder="Enter a cuisine (e.g. Japanese)">
+        <button onclick="loadFavoriteFood()">Get Favorite Food</button>
+        <div id="food-result"></div>
+    </div>
 
-    <p id="greeting"></p>
+    <!-- All Students -->
+    <div class="section">
+        <h2>Students from Database</h2>
+        <button onclick="loadStudents()">Load All Students</button>
+        <div id="studentList"></div>
+    </div>
 
-    <hr>
-    <h2>Favorite Food API</h2>
+    <!-- Filter Students -->
+    <div class="section">
+        <h2>Filter Students</h2>
+        <p>Display students according to their program, year level, or section.</p>
 
-    <input type="text" id="cuisineInput" placeholder="Enter a cuisine (e.g. Japanese)">
-    <button onclick="loadFavoriteFood()">Get Favorite Food</button>
+        <!-- Filter by Program -->
+        <div class="filter-row">
+            <h3>18. Students by Program</h3>
+            <select id="programFilter">
+                <option value="BSIT">BSIT</option>
+                <option value="BSCS">BSCS</option>
+            </select>
+            <button onclick="filterByProgram()">Search Program</button>
+        </div>
 
-    <div id="food-result"></div>
+        <hr>
+
+        <!-- Filter by Year -->
+        <div class="filter-row">
+            <h3>19. Students by Year Level</h3>
+            <select id="yearFilter">
+                <option value="1">1st Year</option>
+                <option value="2">2nd Year</option>
+                <option value="3">3rd Year</option>
+                <option value="4">4th Year</option>
+            </select>
+            <button onclick="filterByYear()">Search Year</button>
+        </div>
+
+        <hr>
+
+        <!-- Filter by Section -->
+        <div class="filter-row">
+            <h3>20. Students by Section</h3>
+            <select id="sectionFilter">
+                <option value="A">Section A</option>
+                <option value="B">Section B</option>
+                <option value="C">Section C</option>
+            </select>
+            <button onclick="filterBySection()">Search Section</button>
+        </div>
+
+        <div id="filterResult"></div>
+    </div>
 
     <script>
+        // Load one sample student
         function loadStudent() {
             fetch('/student')
                 .then(response => response.json())
@@ -62,70 +174,154 @@
                         '<p><b>Year:</b> ' + data.year + '</p>' +
                         '<p><b>Section:</b> ' + data.section + '</p>';
                 })
-                .catch(error => {
+                .catch(() => {
                     document.getElementById('result').innerHTML =
                         '<p>Unable to retrieve data.</p>';
                 });
         }
 
+        // Greeting API
         function sayHello() {
             const name = document.getElementById('nameInput').value;
 
             fetch('/hello?name=' + encodeURIComponent(name))
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('greeting').innerText = data.message;
+                    document.getElementById('greeting').innerText =
+                        data.message;
                 })
-                .catch(error => {
+                .catch(() => {
                     document.getElementById('greeting').innerText =
                         'Unable to retrieve greeting.';
                 });
         }
 
+        // Favorite Food API
         function loadFavoriteFood() {
-            const cuisine = document.getElementById('cuisineInput').value;
+            const cuisine =
+                document.getElementById('cuisineInput').value;
 
-            fetch('/favorite_food?cuisine=' + encodeURIComponent(cuisine))
+            fetch('/favorite_food?cuisine=' +
+                  encodeURIComponent(cuisine))
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('food-result').innerHTML =
-                        '<p><b>Preferred Cuisine:</b> ' + data.preferred_cuisine + '</p>' +
-                        '<p><b>Favorite Dish:</b> ' + data.favorite_dish + '</p>' +
-                        '<p><b>Restaurant:</b> ' + data.restaurant + '</p>' +
-                        '<p><b>Rating:</b> ' + data.rating + '/5</p>';
+                        '<p><b>Preferred Cuisine:</b> ' +
+                        data.preferred_cuisine + '</p>' +
+                        '<p><b>Favorite Dish:</b> ' +
+                        data.favorite_dish + '</p>' +
+                        '<p><b>Restaurant:</b> ' +
+                        data.restaurant + '</p>' +
+                        '<p><b>Rating:</b> ' +
+                        data.rating + '/5</p>';
                 })
-                .catch(error => {
+                .catch(() => {
                     document.getElementById('food-result').innerHTML =
                         '<p>Unable to retrieve favorite food.</p>';
                 });
         }
 
+        // Display student records
+        function displayStudents(data, elementId) {
+            const container = document.getElementById(elementId);
+
+            if (!Array.isArray(data)) {
+                container.textContent =
+                    data.error || 'Unable to retrieve student records.';
+                return;
+            }
+
+            if (data.length === 0) {
+                container.textContent = 'No students found.';
+                return;
+            }
+
+            container.replaceChildren();
+
+            data.forEach(student => {
+                const card = document.createElement('div');
+                card.className = 'student-card';
+
+                const details = [
+                    ['Database ID', student.id],
+                    ['Student ID', student.student_id],
+                    ['Name', student.name],
+                    ['Program', student.program],
+                    ['Year', student.year],
+                    ['Section', student.section]
+                ];
+
+                details.forEach(([label, value]) => {
+                    const line = document.createElement('p');
+                    const bold = document.createElement('b');
+
+                    bold.textContent = label + ': ';
+                    line.appendChild(bold);
+                    line.appendChild(
+                        document.createTextNode(
+                            value == null ? '' : String(value)
+                        )
+                    );
+
+                    card.appendChild(line);
+                });
+
+                container.appendChild(card);
+            });
+        }
+
         function loadStudents() {
             fetch('/students')
                 .then(response => response.json())
-                .then(data => {
-                    let output = '';
-                    data.forEach(student => {
-                        output +=
-                            '<p>' +
-                            '<b>' + student.student_id + '</b> - ' +
-                            student.name + ' | ' +
-                            student.program + ' | Year ' +
-                            student.year + ' | Section ' +
-                            student.section +
-                            '</p>';
-                    });
-                    document.getElementById('studentList').innerHTML = output;
-                })
-                .catch(error => {
-                    document.getElementById('studentList').innerHTML =
-                        '<p>Unable to retrieve student records.</p>';
+                .then(data => displayStudents(data, 'studentList'))
+                .catch(() => {
+                    document.getElementById('studentList').textContent =
+                        'Unable to retrieve student records.';
+                });
+        }
+
+        // 18. Filter by program
+        function filterByProgram() {
+            const program =
+                document.getElementById('programFilter').value;
+
+            filterStudents(
+                '/students/program/' + encodeURIComponent(program)
+            );
+        }
+
+        // 19. Filter by year level
+        function filterByYear() {
+            const year =
+                document.getElementById('yearFilter').value;
+
+            filterStudents('/students/year/' + year);
+        }
+
+        // 20. Filter by section
+        function filterBySection() {
+            const section =
+                document.getElementById('sectionFilter').value;
+
+            filterStudents(
+                '/students/section/' + encodeURIComponent(section)
+            );
+        }
+
+        // Fetch and display filtered records
+        function filterStudents(url) {
+            const container = document.getElementById('filterResult');
+            container.textContent = 'Loading students...';
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => displayStudents(data, 'filterResult'))
+                .catch(() => {
+                    container.textContent =
+                        'Unable to retrieve filtered students.';
                 });
         }
     </script>
-    <hr>
-    <h2>Students from Database</h2>
-    <button onclick="loadStudents()">Load Students</button>
-    <div id="studentList"></div>
+
 </body>
 </html>

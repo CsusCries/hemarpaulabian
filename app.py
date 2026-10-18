@@ -1,3 +1,4 @@
+
 import sqlite3
 from flask import Flask, jsonify, request, render_template
 
@@ -34,7 +35,7 @@ def say_hello():
     })
 
 
-# NEW ENDPOINT 1 (accepts input from URL)
+# ENDPOINT 1: Favorite food
 @app.route('/favorite_food')
 def get_favorite_food():
     cuisine = request.args.get('cuisine', 'Filipino')
@@ -46,7 +47,7 @@ def get_favorite_food():
     })
 
 
-# NEW ENDPOINT 2 (different purpose)
+# ENDPOINT 2: Hobbies
 @app.route('/hobbies')
 def get_hobbies():
     return jsonify({
@@ -56,14 +57,20 @@ def get_hobbies():
         "years_of_experience": 5
     })
 
+
+# Display all students
 @app.route('/students')
 def get_students():
     conn = get_db_connection()
-    students = conn.execute('SELECT * FROM students').fetchall()
+    students = conn.execute(
+        'SELECT * FROM students'
+    ).fetchall()
     conn.close()
 
     return jsonify([dict(student) for student in students])
 
+
+# Display one student by database ID
 @app.route('/students/<int:id>')
 def get_student_by_id(id):
     conn = get_db_connection()
@@ -76,6 +83,46 @@ def get_student_by_id(id):
         return jsonify({"error": "Student not found"}), 404
 
     return jsonify(dict(student))
+
+
+# 18. Display students by program
+@app.route('/students/program/<program>')
+def get_students_by_program(program):
+    conn = get_db_connection()
+    students = conn.execute(
+        'SELECT * FROM students WHERE program = ?',
+        (program.upper(),)
+    ).fetchall()
+    conn.close()
+
+    return jsonify([dict(student) for student in students])
+
+
+# 19. Display students by year level
+@app.route('/students/year/<int:year>')
+def get_students_by_year(year):
+    conn = get_db_connection()
+    students = conn.execute(
+        'SELECT * FROM students WHERE year = ?',
+        (year,)
+    ).fetchall()
+    conn.close()
+
+    return jsonify([dict(student) for student in students])
+
+
+# 20. Display students by section
+@app.route('/students/section/<section>')
+def get_students_by_section(section):
+    conn = get_db_connection()
+    students = conn.execute(
+        'SELECT * FROM students WHERE section = ?',
+        (section.upper(),)
+    ).fetchall()
+    conn.close()
+
+    return jsonify([dict(student) for student in students])
+
 
 if __name__ == '__main__':
     app.run(debug=True)
