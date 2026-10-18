@@ -99,6 +99,33 @@
                         '<p>Unable to retrieve favorite food.</p>';
                 });
         }
+
+        function loadStudents() {
+            fetch('/students')
+                .then(response => response.json())
+                .then(data => {
+                    let output = '';
+                    data.forEach(student => {
+                        output +=
+                            '<p>' +
+                            '<b>' + student.student_id + '</b> - ' +
+                            student.name + ' | ' +
+                            student.program + ' | Year ' +
+                            student.year + ' | Section ' +
+                            student.section +
+                            '</p>';
+                    });
+                    document.getElementById('studentList').innerHTML = output;
+                })
+                .catch(error => {
+                    document.getElementById('studentList').innerHTML =
+                        '<p>Unable to retrieve student records.</p>';
+                });
+        }
     </script>
+    <hr>
+    <h2>Students from Database</h2>
+    <button onclick="loadStudents()">Load Students</button>
+    <div id="studentList"></div>
 </body>
 </html>

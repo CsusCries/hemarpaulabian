@@ -11,8 +11,8 @@ CREATE TABLE IF NOT EXISTS students (
     program TEXT NOT NULL,
     year INTEGER NOT NULL,
     section TEXT NOT NULL
-)
-''')
+    )
+    ''')
 
 cursor.execute("DELETE FROM students")
 
@@ -20,6 +20,8 @@ students = [
     ('2026-00123', 'Juan Dela Cruz', 'BSIT', 1, 'A'),
     ('2026-00124', 'Maria Santos', 'BSIT', 1, 'A'),
     ('2026-00125', 'Pedro Reyes', 'BSIT', 1, 'B'),
+    ('2026-00126', 'Ana Garcia', 'BSIT', 2, 'A'),
+    ('2026-00127', 'Mark Villanueva', 'BSCS', 2, 'B'),
 ]
 
 cursor.executemany('''
