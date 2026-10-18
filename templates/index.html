@@ -2,824 +2,326 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student API Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student API Interface</title>
 
-<style>
-    :root {
-        --primary: #4f46e5;
-        --primary-light: #eef2ff;
-        --background: #f5f7fb;
-        --surface: #ffffff;
-        --text: #20243a;
-        --muted: #778099;
-        --border: #e7eaf2;
-        --green: #16865c;
-        --red: #c03948;
-    }
-
-    * {
-        box-sizing: border-box;
-    }
-
-    body {
-        margin: 0;
-        font-family: Inter, "Segoe UI", Arial, sans-serif;
-        background: var(--background);
-        color: var(--text);
-        font-size: 14px;
-    }
-
-    button, input, select {
-        font: inherit;
-    }
-
-    .topbar {
-        height: 66px;
-        padding: 0 28px;
-        background: var(--surface);
-        border-bottom: 1px solid var(--border);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 15px;
-    }
-
-    .brand {
-        display: flex;
-        align-items: center;
-        gap: 11px;
-        font-size: 17px;
-        font-weight: 750;
-    }
-
-    .brand-icon {
-        width: 38px;
-        height: 38px;
-        display: grid;
-        place-items: center;
-        color: white;
-        background: var(--primary);
-        border-radius: 11px;
-        font-weight: 800;
-    }
-
-    .top-status {
-        color: var(--green);
-        background: #eaf8f1;
-        border-radius: 20px;
-        padding: 8px 12px;
-        font-size: 12px;
-        font-weight: 650;
-    }
-
-    main {
-        max-width: 1500px;
-        margin: auto;
-        padding: 24px 28px;
-    }
-
-    .page-heading {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 22px;
-    }
-
-    .page-heading h1 {
-        font-size: 25px;
-        margin: 0 0 6px;
-        letter-spacing: -0.7px;
-    }
-
-    .page-heading p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 13px;
-    }
-
-    .date-label {
-        color: var(--muted);
-        font-size: 12px;
-        white-space: nowrap;
-    }
-
-    .section-label {
-        color: #858ba0;
-        font-size: 11px;
-        font-weight: 750;
-        text-transform: uppercase;
-        letter-spacing: 1.1px;
-        margin: 0 0 11px;
-    }
-
-    .api-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 15px;
-    }
-
-    .panel {
-        min-width: 0;
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 13px;
-        padding: 18px;
-        box-shadow: 0 3px 10px rgba(30, 41, 59, 0.025);
-    }
-
-    .panel-heading {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 14px;
-    }
-
-    .panel-icon {
-        width: 37px;
-        height: 37px;
-        flex-shrink: 0;
-        display: grid;
-        place-items: center;
-        border-radius: 10px;
-        background: var(--primary-light);
-        color: var(--primary);
-        font-size: 16px;
-        font-weight: 800;
-    }
-
-    .panel-heading h2 {
-        margin: 0 0 3px;
-        font-size: 14px;
-        font-weight: 750;
-    }
-
-    .panel-heading p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 11px;
-    }
-
-    .controls {
-        display: flex;
-        gap: 8px;
-    }
-
-    input, select {
-        width: 100%;
-        min-width: 0;
-        height: 39px;
-        padding: 0 11px;
-        color: var(--text);
-        background: #fff;
-        border: 1px solid #dfe3ee;
-        border-radius: 7px;
-        outline: none;
-    }
-
-    input:focus, select:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px #4f46e51a;
-    }
-
-    button {
-        min-height: 38px;
-        border: none;
-        border-radius: 7px;
-        padding: 0 13px;
-        background: var(--primary);
-        color: white;
-        font-size: 12px;
-        font-weight: 700;
-        cursor: pointer;
-        white-space: nowrap;
-        transition: background 0.15s;
-    }
-
-    button:hover {
-        background: #4338ca;
-    }
-
-    button.secondary {
-        background: #f0f2f8;
-        color: #454b62;
-    }
-
-    button.secondary:hover {
-        background: #e4e7f0;
-    }
-
-    .result {
-        margin-top: 12px;
-        padding: 11px;
-        min-height: 48px;
-        border: 1px solid #edf0f6;
-        border-radius: 8px;
-        background: #fafbfe;
-        overflow-wrap: anywhere;
-    }
-
-    .result:empty {
-        display: block;
-    }
-
-    .empty {
-        color: #9299aa;
-        font-size: 12px;
-    }
-
-    .data-line {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 12px;
-        padding: 6px 0;
-        border-bottom: 1px solid #edf0f5;
-        font-size: 12px;
-    }
-
-    .data-line:last-child {
-        border-bottom: none;
-    }
-
-    .data-line span:first-child {
-        color: var(--muted);
-        text-transform: capitalize;
-    }
-
-    .data-line span:last-child {
-        font-weight: 650;
-        text-align: right;
-        color: var(--text);
-    }
-
-    .student-card {
-        padding: 11px;
-        margin: 8px 0;
-        background: white;
-        border: 1px solid var(--border);
-        border-radius: 8px;
-    }
-
-    .student-card h3 {
-        font-size: 13px;
-        margin: 0 0 8px;
-    }
-
-    .student-card p {
-        display: flex;
-        justify-content: space-between;
-        gap: 8px;
-        margin: 5px 0;
-        font-size: 11px;
-    }
-
-    .student-card p strong {
-        color: var(--muted);
-        font-weight: 500;
-    }
-
-    .student-card p span {
-        text-align: right;
-        overflow-wrap: anywhere;
-    }
-
-    .student-list {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
-    }
-
-    .student-list .student-card {
-        margin: 0;
-    }
-
-    .wide-panel {
-        margin-top: 17px;
-    }
-
-    .wide-heading {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 12px;
-    }
-
-    .wide-heading h2 {
-        margin: 0 0 4px;
-        font-size: 15px;
-    }
-
-    .wide-heading p {
-        margin: 0;
-        font-size: 12px;
-        color: var(--muted);
-    }
-
-    .database-tools {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-    }
-
-    .filter-controls {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
-        gap: 8px;
-    }
-
-    .search-panel {
-        border-color: #c9ccff;
-        box-shadow: 0 3px 14px rgba(79, 70, 229, 0.07);
-    }
-
-    .item-badge {
-        display: inline-block;
-        padding: 4px 7px;
-        border-radius: 5px;
-        background: var(--primary-light);
-        color: var(--primary);
-        font-size: 10px;
-        font-weight: 800;
-        letter-spacing: 0.5px;
-    }
-
-    .error {
-        color: var(--red);
-        font-size: 12px;
-    }
-
-    .success {
-        color: var(--green);
-        font-size: 12px;
-    }
-
-    footer {
-        padding: 20px 0 5px;
-        color: #959bad;
-        text-align: center;
-        font-size: 11px;
-    }
-
-    @media (min-width: 1200px) {
-        .api-grid {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
-    }
-
-    @media (max-width: 1000px) {
-        main {
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
             padding: 20px;
+            background-color: #f4f6f9;
+            color: #333;
         }
 
-        .api-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-    }
-
-    @media (max-width: 650px) {
-        .topbar {
-            padding: 0 15px;
+        h1, h2 {
+            color: #243b64;
         }
 
-        main {
-            padding: 18px 12px;
+        button {
+            padding: 9px 14px;
+            margin: 5px;
+            cursor: pointer;
+            background-color: #315b96;
+            color: white;
+            border: none;
+            border-radius: 4px;
         }
 
-        .api-grid {
-            grid-template-columns: 1fr;
+        button:hover {
+            background-color: #1d3f70;
         }
 
-        .page-heading {
-            align-items: flex-start;
-            flex-direction: column;
+        input, select {
+            padding: 9px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
 
-        .filter-controls {
-            grid-template-columns: 1fr;
+        .section {
+            margin-top: 20px;
+            padding: 18px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
         }
 
-        .wide-heading {
-            align-items: flex-start;
-            flex-direction: column;
+        #result, #greeting, #food-result,
+        #studentList, #filterResult {
+            margin-top: 15px;
+            padding: 10px;
+            overflow-wrap: anywhere;
         }
 
-        .database-tools {
-            width: 100%;
+        .student-card {
+            padding: 12px;
+            margin: 10px 0;
+            background: #f0f5ff;
+            border-left: 4px solid #315b96;
+            border-radius: 4px;
         }
 
-        .student-list {
-            grid-template-columns: 1fr;
+        .message {
+            color: #666;
         }
-    }
-</style>
+
+        .filter-row {
+            margin: 10px 0;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #ddd;
+            margin: 25px 0;
+        }
+    </style>
 </head>
 
 <body>
 
-<header class="topbar">
-    <div class="brand">
-        <div class="brand-icon">S</div>
-        <span>Student API</span>
-    </div>
-    <div class="top-status">● API Dashboard</div>
-</header>
+    <h1>Student API Interface</h1>
 
-<main>
-    <div class="page-heading">
-        <div>
-            <h1>Dashboard Overview</h1>
-            <p>Test your Flask endpoints and compare their responses.</p>
-        </div>
-        <div class="date-label">Flask · SQLite · JSON</div>
+    <!-- Student Information -->
+    <div class="section">
+        <h2>Student Information API</h2>
+        <button onclick="loadStudent()">Load Student Information</button>
+        <div id="result"></div>
     </div>
 
-    <p class="section-label">API endpoints</p>
+    <!-- Greeting API -->
+    <div class="section">
+        <h2>Greeting API</h2>
+        <input type="text" id="nameInput"
+               placeholder="Enter your first name">
+        <button onclick="sayHello()">Say Hello</button>
+        <p id="greeting"></p>
+    </div>
 
-    <div class="api-grid">
+    <!-- Favorite Food API -->
+    <div class="section">
+        <h2>Favorite Food API</h2>
+        <input type="text" id="cuisineInput"
+               placeholder="Enter a cuisine (e.g. Japanese)">
+        <button onclick="loadFavoriteFood()">Get Favorite Food</button>
+        <div id="food-result"></div>
+    </div>
 
-        <!-- Student API -->
-        <section class="panel">
-            <div class="panel-heading">
-                <div class="panel-icon">01</div>
-                <div>
-                    <h2>Student Information</h2>
-                    <p>GET /student</p>
-                </div>
-            </div>
-            <button onclick="loadStudent()">Fetch Student</button>
-            <div class="result" id="studentResult">
-                <span class="empty">Response will appear here.</span>
-            </div>
-        </section>
+    <!-- All Students -->
+    <div class="section">
+        <h2>Students from Database</h2>
+        <button onclick="loadStudents()">Load All Students</button>
+        <div id="studentList"></div>
+    </div>
 
-        <!-- Greeting API -->
-        <section class="panel">
-            <div class="panel-heading">
-                <div class="panel-icon">02</div>
-                <div>
-                    <h2>Greeting API</h2>
-                    <p>GET /hello?name=...</p>
-                </div>
-            </div>
-            <div class="controls">
-                <input id="nameInput" placeholder="Enter a name">
-                <button onclick="sayHello()">Send</button>
-            </div>
-            <div class="result" id="helloResult">
-                <span class="empty">Greeting response will appear here.</span>
-            </div>
-        </section>
+    <!-- Filter Students -->
+    <div class="section">
+        <h2>Filter Students</h2>
+        <p>Display students according to their program, year level, or section.</p>
 
-        <!-- Food API -->
-        <section class="panel">
-            <div class="panel-heading">
-                <div class="panel-icon">03</div>
-                <div>
-                    <h2>Favorite Food</h2>
-                    <p>GET /favorite_food</p>
-                </div>
-            </div>
-            <div class="controls">
-                <input id="cuisineInput" placeholder="e.g. Filipino">
-                <button onclick="loadFavoriteFood()">Send</button>
-            </div>
-            <div class="result" id="foodResult">
-                <span class="empty">Food response will appear here.</span>
-            </div>
-        </section>
-
-        <!-- Hobbies API -->
-        <section class="panel">
-            <div class="panel-heading">
-                <div class="panel-icon">04</div>
-                <div>
-                    <h2>Hobbies API</h2>
-                    <p>GET /hobbies</p>
-                </div>
-            </div>
-            <button onclick="loadHobbies()">Fetch Hobbies</button>
-            <div class="result" id="hobbiesResult">
-                <span class="empty">Hobbies response will appear here.</span>
-            </div>
-        </section>
-
-        <!-- Filter API -->
-        <section class="panel">
-            <div class="panel-heading">
-                <div class="panel-icon">05</div>
-                <div>
-                    <h2>Filter Students</h2>
-                    <p>Search database records</p>
-                </div>
-            </div>
-
-            <select id="filterType">
-                <option value="program">Search by Program</option>
-                <option value="year">Search by Year</option>
-                <option value="section">Search by Section</option>
-            </select>
-
-            <select id="filterValue">
+        <!-- Filter by Program -->
+        <div class="filter-row">
+            <h3>18. Students by Program</h3>
+            <select id="programFilter">
                 <option value="BSIT">BSIT</option>
                 <option value="BSCS">BSCS</option>
             </select>
+            <button onclick="filterByProgram()">Search Program</button>
+        </div>
 
-            <button onclick="filterStudents()">Search Records</button>
-            <div class="result" id="filterResult">
-                <span class="empty">Filtered records will appear here.</span>
-            </div>
-        </section>
+        <hr>
 
-        <!-- Item 27 -->
-        <section class="panel search-panel">
-            <div class="panel-heading">
-                <div class="panel-icon">27</div>
-                <div>
-                    <h2>Search by Database ID</h2>
-                    <p>GET /student/&lt;id&gt;</p>
-                </div>
-            </div>
+        <!-- Filter by Year -->
+        <div class="filter-row">
+            <h3>19. Students by Year Level</h3>
+            <select id="yearFilter">
+                <option value="1">1st Year</option>
+                <option value="2">2nd Year</option>
+                <option value="3">3rd Year</option>
+                <option value="4">4th Year</option>
+            </select>
+            <button onclick="filterByYear()">Search Year</button>
+        </div>
 
-            <div class="controls">
-                <input
-                    type="number"
-                    id="searchStudentId"
-                    min="1"
-                    placeholder="Enter database ID"
-                >
-                <button onclick="searchStudentById()">Search</button>
-            </div>
+        <hr>
 
-            <div class="result" id="searchByResult">
-                <span class="empty">The selected student's details will appear here.</span>
-            </div>
-        </section>
+        <!-- Filter by Section -->
+        <div class="filter-row">
+            <h3>20. Students by Section</h3>
+            <select id="sectionFilter">
+                <option value="A">Section A</option>
+                <option value="B">Section B</option>
+                <option value="C">Section C</option>
+            </select>
+            <button onclick="filterBySection()">Search Section</button>
+        </div>
 
+        <div id="filterResult"></div>
     </div>
 
-    <!-- All Students Database -->
-    <section class="panel wide-panel">
-        <div class="wide-heading">
-            <div>
-                <h2>Student Database</h2>
-                <p>View and compare the records stored in SQLite.</p>
-            </div>
-            <div class="database-tools">
-                <button class="secondary" onclick="loadStudents()">Refresh Records</button>
-            </div>
-        </div>
-
-        <div id="studentsResult" class="student-list">
-            <span class="empty">Click Refresh Records to load the database.</span>
-        </div>
-    </section>
-
-    <footer>Student API Dashboard · Built with Flask and SQLite</footer>
-</main>
-
-<script>
-    async function fetchJSON(url) {
-        const response = await fetch(url);
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error || "The request failed.");
+    <script>
+        // Load one sample student
+        function loadStudent() {
+            fetch('/student')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('result').innerHTML =
+                        '<p><b>Student ID:</b> ' + data.student_id + '</p>' +
+                        '<p><b>Name:</b> ' + data.name + '</p>' +
+                        '<p><b>Program:</b> ' + data.program + '</p>' +
+                        '<p><b>Year:</b> ' + data.year + '</p>' +
+                        '<p><b>Section:</b> ' + data.section + '</p>';
+                })
+                .catch(() => {
+                    document.getElementById('result').innerHTML =
+                        '<p>Unable to retrieve data.</p>';
+                });
         }
 
-        return data;
-    }
+        // Greeting API
+        function sayHello() {
+            const name = document.getElementById('nameInput').value;
 
-    function showMessage(id, message, isError = false) {
-        const element = document.getElementById(id);
-        element.replaceChildren();
-
-        const span = document.createElement("span");
-        span.className = isError ? "error" : "success";
-        span.textContent = message;
-        element.appendChild(span);
-    }
-
-    function displayObject(data, elementId) {
-        const container = document.getElementById(elementId);
-        container.replaceChildren();
-
-        Object.entries(data).forEach(([key, value]) => {
-            const line = document.createElement("div");
-            line.className = "data-line";
-
-            const label = document.createElement("span");
-            label.textContent = key.replaceAll("_", " ");
-
-            const content = document.createElement("span");
-            content.textContent = Array.isArray(value)
-                ? value.join(", ")
-                : String(value);
-
-            line.append(label, content);
-            container.appendChild(line);
-        });
-    }
-
-    function displayStudents(data, elementId) {
-        const container = document.getElementById(elementId);
-        container.replaceChildren();
-
-        if (!Array.isArray(data)) {
-            data = [data];
+            fetch('/hello?name=' + encodeURIComponent(name))
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('greeting').innerText =
+                        data.message;
+                })
+                .catch(() => {
+                    document.getElementById('greeting').innerText =
+                        'Unable to retrieve greeting.';
+                });
         }
 
-        if (data.length === 0) {
-            const message = document.createElement("span");
-            message.className = "empty";
-            message.textContent = "No matching student records found.";
-            container.appendChild(message);
-            return;
+        // Favorite Food API
+        function loadFavoriteFood() {
+            const cuisine =
+                document.getElementById('cuisineInput').value;
+
+            fetch('/favorite_food?cuisine=' +
+                  encodeURIComponent(cuisine))
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('food-result').innerHTML =
+                        '<p><b>Preferred Cuisine:</b> ' +
+                        data.preferred_cuisine + '</p>' +
+                        '<p><b>Favorite Dish:</b> ' +
+                        data.favorite_dish + '</p>' +
+                        '<p><b>Restaurant:</b> ' +
+                        data.restaurant + '</p>' +
+                        '<p><b>Rating:</b> ' +
+                        data.rating + '/5</p>';
+                })
+                .catch(() => {
+                    document.getElementById('food-result').innerHTML =
+                        '<p>Unable to retrieve favorite food.</p>';
+                });
         }
 
-        data.forEach(student => {
-            const card = document.createElement("div");
-            card.className = "student-card";
+        // Display student records
+        function displayStudents(data, elementId) {
+            const container = document.getElementById(elementId);
 
-            const heading = document.createElement("h3");
-            heading.textContent = student.name || "Student Record";
-            card.appendChild(heading);
+            if (!Array.isArray(data)) {
+                container.textContent =
+                    data.error || 'Unable to retrieve student records.';
+                return;
+            }
 
-            const fields = [
-                ["Database ID", student.id],
-                ["Student ID", student.student_id],
-                ["Program", student.program],
-                ["Year", student.year],
-                ["Section", student.section]
-            ];
+            if (data.length === 0) {
+                container.textContent = 'No students found.';
+                return;
+            }
 
-            fields.forEach(([label, value]) => {
-                if (value === undefined || value === null) return;
+            container.replaceChildren();
 
-                const row = document.createElement("p");
-                const strong = document.createElement("strong");
-                const span = document.createElement("span");
+            data.forEach(student => {
+                const card = document.createElement('div');
+                card.className = 'student-card';
 
-                strong.textContent = label;
-                span.textContent = String(value);
+                const details = [
+                    ['Database ID', student.id],
+                    ['Student ID', student.student_id],
+                    ['Name', student.name],
+                    ['Program', student.program],
+                    ['Year', student.year],
+                    ['Section', student.section]
+                ];
 
-                row.append(strong, span);
-                card.appendChild(row);
+                details.forEach(([label, value]) => {
+                    const line = document.createElement('p');
+                    const bold = document.createElement('b');
+
+                    bold.textContent = label + ': ';
+                    line.appendChild(bold);
+                    line.appendChild(
+                        document.createTextNode(
+                            value == null ? '' : String(value)
+                        )
+                    );
+
+                    card.appendChild(line);
+                });
+
+                container.appendChild(card);
             });
-
-            container.appendChild(card);
-        });
-    }
-
-    async function loadStudent() {
-        const id = "studentResult";
-        showMessage(id, "Loading...");
-
-        try {
-            displayObject(await fetchJSON("/student"), id);
-        } catch (error) {
-            showMessage(id, error.message, true);
         }
-    }
 
-    async function sayHello() {
-        const name = document.getElementById("nameInput").value.trim();
-        const id = "helloResult";
-        showMessage(id, "Loading...");
+        function loadStudents() {
+            fetch('/students')
+                .then(response => response.json())
+                .then(data => displayStudents(data, 'studentList'))
+                .catch(() => {
+                    document.getElementById('studentList').textContent =
+                        'Unable to retrieve student records.';
+                });
+        }
 
-        try {
-            const data = await fetchJSON(
-                "/hello?name=" + encodeURIComponent(name || "Student")
+        // 18. Filter by program
+        function filterByProgram() {
+            const program =
+                document.getElementById('programFilter').value;
+
+            filterStudents(
+                '/students/program/' + encodeURIComponent(program)
             );
-            displayObject(data, id);
-        } catch (error) {
-            showMessage(id, error.message, true);
         }
-    }
 
-    async function loadFavoriteFood() {
-        const cuisine = document.getElementById("cuisineInput").value.trim();
-        const id = "foodResult";
-        showMessage(id, "Loading...");
+        // 19. Filter by year level
+        function filterByYear() {
+            const year =
+                document.getElementById('yearFilter').value;
 
-        try {
-            const data = await fetchJSON(
-                "/favorite_food?cuisine=" +
-                encodeURIComponent(cuisine || "Filipino")
+            filterStudents('/students/year/' + year);
+        }
+
+        // 20. Filter by section
+        function filterBySection() {
+            const section =
+                document.getElementById('sectionFilter').value;
+
+            filterStudents(
+                '/students/section/' + encodeURIComponent(section)
             );
-            displayObject(data, id);
-        } catch (error) {
-            showMessage(id, error.message, true);
-        }
-    }
-
-    async function loadHobbies() {
-        const id = "hobbiesResult";
-        showMessage(id, "Loading...");
-
-        try {
-            displayObject(await fetchJSON("/hobbies"), id);
-        } catch (error) {
-            showMessage(id, error.message, true);
-        }
-    }
-
-    async function loadStudents() {
-        const container = document.getElementById("studentsResult");
-        container.textContent = "Loading records...";
-
-        try {
-            const data = await fetchJSON("/students");
-            displayStudents(data, "studentsResult");
-        } catch (error) {
-            showMessage("studentsResult", error.message, true);
-        }
-    }
-
-    function updateFilterValues() {
-        const type = document.getElementById("filterType").value;
-        const select = document.getElementById("filterValue");
-
-        const options = {
-            program: [
-                ["BSIT", "BSIT"],
-                ["BSCS", "BSCS"]
-            ],
-            year: [
-                ["1", "1st Year"],
-                ["2", "2nd Year"],
-                ["3", "3rd Year"],
-                ["4", "4th Year"]
-            ],
-            section: [
-                ["A", "Section A"],
-                ["B", "Section B"]
-            ]
-        };
-
-        select.replaceChildren();
-
-        options[type].forEach(([value, label]) => {
-            const option = document.createElement("option");
-            option.value = value;
-            option.textContent = label;
-            select.appendChild(option);
-        });
-    }
-
-    document.getElementById("filterType").addEventListener(
-        "change",
-        updateFilterValues
-    );
-
-    async function filterStudents() {
-        const type = document.getElementById("filterType").value;
-        const value = document.getElementById("filterValue").value;
-        const url = "/students/" + type + "/" + encodeURIComponent(value);
-
-        showMessage("filterResult", "Searching...");
-
-        try {
-            const data = await fetchJSON(url);
-            displayStudents(data, "filterResult");
-        } catch (error) {
-            showMessage("filterResult", error.message, true);
-        }
-    }
-
-    async function searchStudentById() {
-        const idValue = document.getElementById("searchStudentId").value.trim();
-
-        if (!idValue || !Number.isInteger(Number(idValue)) ||
-            Number(idValue) < 1) {
-            showMessage("searchByResult", "Enter a valid database ID.", true);
-            return;
         }
 
-        showMessage("searchByResult", "Searching...");
+        // Fetch and display filtered records
+        function filterStudents(url) {
+            const container = document.getElementById('filterResult');
+            container.textContent = 'Loading students...';
 
-        try {
-            const student = await fetchJSON(
-                "/student/" + encodeURIComponent(idValue)
-            );
-            displayStudents([student], "searchByResult");
-        } catch (error) {
-            showMessage("searchByResult", error.message, true);
+            fetch(url)
+                .then(response => response.json())
+                .then(data => displayStudents(data, 'filterResult'))
+                .catch(() => {
+                    container.textContent =
+                        'Unable to retrieve filtered students.';
+                });
         }
-    }
-
-    document.getElementById("searchStudentId").addEventListener(
-        "keydown",
-        event => {
-            if (event.key === "Enter") searchStudentById();
-        }
-    );
-
-    updateFilterValues();
-</script>
+    </script>
 
 </body>
 </html>
