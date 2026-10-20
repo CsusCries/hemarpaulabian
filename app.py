@@ -1,8 +1,12 @@
 
+import random
 import sqlite3
 from flask import Flask, jsonify, request, render_template
 
 app = Flask(__name__)
+
+# Current verification code for the change password flow
+verification = {"code": None}
 
 
 def get_db_connection():
@@ -138,6 +142,32 @@ def get_students_by_section(section):
     conn.close()
 
     return jsonify([dict(student) for student in students])
+
+
+# Change password: generate a 6-digit verification code
+@app.route('/request_code', methods=['POST'])
+def request_code():
+    verification['code'] = f"{random.randint(0, 999999):06d}"
+    # Demo only: a real app would email/SMS this instead of returning it
+    return jsonify({"code": verification['code']})
+
+
+@app.route('/verify_code', methods=['POST'])
+def verify_code():
+    code = request.get_json().get('code')
+    return jsonify({"valid": code is not None and code == verification['code']})
+
+
+@app.route('/change_password', methods=['POST'])
+def change_password():
+    data = request.get_json()
+    if not verification['code'] or data.get('code') != verification['code']:
+        return jsonify({"error": "Invalid or expired code"}), 400
+    if len(data.get('password', '')) < 6:
+        return jsonify({"error": "Password must be at least 6 characters"}), 400
+
+    verification['code'] = None
+    return jsonify({"message": "Password changed successfully!"})
 
 
 if __name__ == '__main__':
