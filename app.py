@@ -1,9 +1,11 @@
 import sqlite3
-import urllib.request
-from urllib.parse import urlparse
+import requests
 from flask import Flask, jsonify, request, render_template
 
 app = Flask(__name__)
+
+# Lab 9: replace with your partner's deployed /api/students URL
+PARTNER_URL = "https://CLASSMATE-APP.onrender.com/api/students"
 
 
 def get_db_connection():
@@ -134,7 +136,7 @@ def get_students_by_section(section):
     return jsonify([dict(student) for student in students])
 
 
-# Lab 8: list all records as JSON (GET) and add a record (POST)
+# Lab 8 and Lab 9: list all records (GET) and add a record (POST)
 @app.route('/api/students', methods=['GET', 'POST'])
 def api_students():
     if request.method == 'GET':
@@ -144,13 +146,14 @@ def api_students():
         return jsonify([dict(row) for row in rows])
 
     data = request.get_json()
+    source = data.get('source', 'External API')
     conn = get_db_connection()
     cursor = conn.execute(
         """INSERT INTO students
-           (student_id, name, program, year, section)
-           VALUES (?, ?, ?, ?, ?)""",
+           (student_id, name, program, year, section, source)
+           VALUES (?, ?, ?, ?, ?, ?)""",
         (data['student_id'], data['name'], data['program'],
-         data['year'], data['section'])
+         data['year'], data['section'], source)
     )
     conn.commit()
     new_id = cursor.lastrowid
@@ -199,19 +202,50 @@ def delete_student(id):
     return jsonify({"message": "Student deleted"})
 
 
-# Lab 8: read-only proxy for a classmate's API (avoids browser CORS limits)
-@app.route('/api/classmate')
-def classmate_proxy():
-    url = request.args.get('url', '')
-    parsed = urlparse(url)
-    if parsed.scheme != 'https' or not parsed.netloc:
-        return jsonify({"error": "Enter a valid https:// API URL."}), 400
+# Lab 9: retrieve the partner's records on the server side
+@app.route('/partner-records')
+def partner_records():
     try:
-        with urllib.request.urlopen(url, timeout=15) as resp:
-            body = resp.read()
-        return app.response_class(body, mimetype='application/json')
-    except Exception:
-        return jsonify({"error": "Could not reach that API."}), 502
+        response = requests.get(PARTNER_URL, timeout=15)
+        response.raise_for_status()
+        return jsonify(response.json())
+    except (requests.RequestException, ValueError):
+        return jsonify({"error": "Unable to retrieve partner data"}), 502
+
+
+# Lab 9: save a selected partner record into my own database
+@app.route('/import-student', methods=['POST'])
+def import_student():
+    data = request.get_json()
+    conn = get_db_connection()
+    conn.execute(
+        """INSERT INTO students
+           (student_id, name, program, year, section, source)
+           VALUES (?, ?, ?, ?, ?, ?)""",
+        (data['student_id'], data['name'], data['program'],
+         data['year'], data['section'], 'Classmate API')
+    )
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Remote record saved"}), 201
+
+
+# Lab 9: send one practice record to the partner's POST endpoint
+@app.route('/send-to-partner', methods=['POST'])
+def send_to_partner():
+    record = {
+        "student_id": "EXT-001",
+        "name": "Sample Exchange Record",
+        "program": "BSIT",
+        "year": 1,
+        "section": "A",
+        "source": "Partner API"
+    }
+    try:
+        response = requests.post(PARTNER_URL, json=record, timeout=15)
+        return jsonify({"status": response.status_code, "response": response.text})
+    except requests.RequestException:
+        return jsonify({"error": "Unable to send record to partner."}), 502
 
 
 if __name__ == '__main__':

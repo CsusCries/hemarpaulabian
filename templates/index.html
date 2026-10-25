@@ -23,7 +23,7 @@
             margin: 0; font-family: Arial, Helvetica, sans-serif;
             background: var(--bg); color: var(--text); line-height: 1.5;
         }
-        .container { max-width: 1000px; margin: 0 auto; padding: 32px 20px 48px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 32px 20px 48px; }
         header {
             display: flex; align-items: center; justify-content: space-between;
             flex-wrap: wrap; gap: 12px; margin-bottom: 24px;
@@ -114,6 +114,12 @@
         tbody tr.clickable { cursor: pointer; }
         tbody tr.clickable:hover td { background: #fafbfd; }
         td.actions { display: flex; gap: 6px; }
+        .badge {
+            display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 4px;
+            background: var(--accent-soft); color: var(--accent);
+        }
+        .badge.imported { background: #eaf3de; color: #3b6d11; }
+        .badge.received { background: #faeeda; color: #854f0b; }
         .details {
             display: grid; grid-template-columns: max-content 1fr;
             gap: 6px 16px; margin: 0 0 12px; font-size: 14px;
@@ -130,23 +136,24 @@
     <header>
         <div>
             <h1>Student API</h1>
-            <p>Flask backend on Render</p>
+            <p>Integration dashboard</p>
         </div>
         <span class="status">Connected</span>
     </header>
 
+    <!-- INTEGRATION DASHBOARD -->
     <div class="stats">
         <div class="stat">
-            <div class="stat-label">My records</div>
-            <div class="stat-value" id="statCount">&mdash;</div>
+            <div class="stat-label">My local records</div>
+            <div class="stat-value" id="statLocal">&mdash;</div>
         </div>
         <div class="stat">
-            <div class="stat-label">Classmate records</div>
-            <div class="stat-value" id="statClassmate">&mdash;</div>
+            <div class="stat-label">Imported records</div>
+            <div class="stat-value" id="statImported">&mdash;</div>
         </div>
         <div class="stat">
-            <div class="stat-label">Programs</div>
-            <div class="stat-value">2</div>
+            <div class="stat-label">Partner records</div>
+            <div class="stat-value" id="statPartner">&mdash;</div>
         </div>
     </div>
 
@@ -181,14 +188,14 @@
         </div>
     </div>
 
-    <!-- MY RECORDS: Create and Update -->
+    <!-- MY RECORDS: Create and Update (local only) -->
     <div class="panel">
         <div class="panel-head">
             <h2 id="formTitle">Add student</h2>
-            <span class="source-label">Source: My Records (local database)</span>
+            <span class="source-label">Source: Local (my database)</span>
         </div>
         <div class="form-grid">
-            <input type="text" id="newStudentId" placeholder="Student ID (e.g. 24-00200)">
+            <input type="text" id="newStudentId" placeholder="Student ID (e.g. 2026-00123)">
             <input type="text" id="newName" placeholder="Full name">
             <select id="newProgram">
                 <option value="BSIT">BSIT</option>
@@ -213,24 +220,18 @@
         <div id="addResult" class="result"></div>
     </div>
 
-    <!-- MY RECORDS: Read, Delete, Search -->
+    <!-- MY RECORDS: Read, Delete, Search, Source filter -->
     <div class="panel">
         <div class="panel-head">
             <h2>My Records</h2>
             <span class="source-label">Source: local database</span>
         </div>
 
-        <div class="chips" id="filterChips">
-            <button class="chip active" onclick="setFilter(this, 'all')">All</button>
-            <button class="chip" onclick="setFilter(this, 'program:BSIT')">BSIT</button>
-            <button class="chip" onclick="setFilter(this, 'program:BSCS')">BSCS</button>
-            <button class="chip" onclick="setFilter(this, 'year:1')">Year 1</button>
-            <button class="chip" onclick="setFilter(this, 'year:2')">Year 2</button>
-            <button class="chip" onclick="setFilter(this, 'year:3')">Year 3</button>
-            <button class="chip" onclick="setFilter(this, 'year:4')">Year 4</button>
-            <button class="chip" onclick="setFilter(this, 'section:A')">Section A</button>
-            <button class="chip" onclick="setFilter(this, 'section:B')">Section B</button>
-            <button class="chip" onclick="setFilter(this, 'section:C')">Section C</button>
+        <div class="chips" id="sourceChips">
+            <button class="chip active" onclick="setSource(this, 'all')">All</button>
+            <button class="chip" onclick="setSource(this, 'Local')">Local</button>
+            <button class="chip" onclick="setSource(this, 'Classmate API')">Classmate API</button>
+            <button class="chip" onclick="setSource(this, 'External API')">External API</button>
         </div>
 
         <input type="text" id="mySearch" class="search" placeholder="Search my records" oninput="renderMy()">
@@ -245,29 +246,29 @@
                         <th>Program</th>
                         <th>Year</th>
                         <th>Section</th>
+                        <th>Source</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="studentBody">
-                    <tr><td colspan="7" class="muted">Loading records...</td></tr>
+                    <tr><td colspan="8" class="muted">Loading records...</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- CLASSMATE RECORDS: Read-only -->
+    <!-- PARTNER RECORDS: Read and save to my database -->
     <div class="panel">
         <div class="panel-head">
-            <h2>Classmate's Records</h2>
-            <span class="source-label readonly">Source: classmate's API (read-only)</span>
+            <h2>Partner Records</h2>
+            <span class="source-label readonly">Source: partner's API (read-only)</span>
         </div>
 
         <div class="row" style="margin-bottom:12px;">
-            <input type="text" id="classmateUrl" placeholder="https://CLASSMATE-APP.onrender.com/api/students">
-            <button onclick="loadClassmate()">Load classmate records</button>
+            <button onclick="loadPartner()">Load partner records</button>
         </div>
 
-        <input type="text" id="classmateSearch" class="search" placeholder="Search classmate records" oninput="renderClassmate()">
+        <input type="text" id="partnerSearch" class="search" placeholder="Search partner records" oninput="renderPartner()">
 
         <div class="table-wrap">
             <table>
@@ -279,13 +280,28 @@
                         <th>Program</th>
                         <th>Year</th>
                         <th>Section</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody id="classmateBody">
-                    <tr><td colspan="6" class="muted">Enter a classmate's API URL and load their records.</td></tr>
+                <tbody id="partnerBody">
+                    <tr><td colspan="7" class="muted">Press "Load partner records" to view your partner's data.</td></tr>
                 </tbody>
             </table>
         </div>
+        <div id="partnerResult" class="result"></div>
+    </div>
+
+    <!-- SEND: Send a practice record to the partner -->
+    <div class="panel">
+        <div class="panel-head">
+            <h2>Send practice record</h2>
+            <span class="source-label readonly">Sends EXT-001 to partner's POST endpoint</span>
+        </div>
+        <p class="muted">Coordinate with your partner before sending. This sends one fictional record.</p>
+        <div class="row" style="margin-top:12px;">
+            <button onclick="sendToPartner()">Send to partner</button>
+        </div>
+        <div id="sendResult" class="result"></div>
     </div>
 
     <!-- DETAILS -->
@@ -302,20 +318,12 @@
 
 <script>
     let myRecords = [];
-    let classmateRecords = [];
-    let currentFilter = 'all';
+    let partnerRecords = [];
+    let currentSource = 'all';
     let editingId = null;
 
     function setText(id, text) {
         document.getElementById(id).textContent = text;
-    }
-
-    function setFilter(button, filter) {
-        document.querySelectorAll('#filterChips .chip')
-            .forEach(chip => chip.classList.remove('active'));
-        button.classList.add('active');
-        currentFilter = filter;
-        loadMyRecords();
     }
 
     function matches(student, query) {
@@ -355,20 +363,65 @@
         document.getElementById('detailsPanel').classList.add('hidden');
     }
 
-    function renderTable(bodyId, records, source, withActions) {
-        const body = document.getElementById(bodyId);
-        const cols = withActions ? 7 : 6;
+    function sourceBadge(source) {
+        const span = document.createElement('span');
+        span.className = 'badge';
+        if (source === 'Classmate API') span.classList.add('imported');
+        if (source === 'External API') span.classList.add('received');
+        span.textContent = source || 'Local';
+        return span;
+    }
+
+    // MY RECORDS: Read
+    function loadMyRecords() {
+        showRow('studentBody', 8, 'Loading records...', false);
+
+        fetch('/api/students')
+            .then(response => response.json())
+            .then(data => {
+                if (!Array.isArray(data)) {
+                    showRow('studentBody', 8, data.error || 'Unable to retrieve records.', true);
+                    return;
+                }
+                myRecords = data;
+                setText('statLocal', data.filter(s => (s.source || 'Local') === 'Local').length);
+                setText('statImported', data.filter(s => s.source === 'Classmate API').length);
+                renderMy();
+            })
+            .catch(() => showRow('studentBody', 8, 'Unable to retrieve records.', true));
+    }
+
+    function setSource(button, source) {
+        document.querySelectorAll('#sourceChips .chip')
+            .forEach(chip => chip.classList.remove('active'));
+        button.classList.add('active');
+        currentSource = source;
+        renderMy();
+    }
+
+    function renderMy() {
+        const query = document.getElementById('mySearch').value.trim().toLowerCase();
+        let list = myRecords;
+        if (currentSource !== 'all') {
+            list = list.filter(s => (s.source || 'Local') === currentSource);
+        }
+        if (query) {
+            list = list.filter(s => matches(s, query));
+        }
+
+        const body = document.getElementById('studentBody');
         body.replaceChildren();
 
-        if (records.length === 0) {
-            showRow(bodyId, cols, 'No students found.', false);
+        if (list.length === 0) {
+            showRow('studentBody', 8, 'No records found.', false);
             return;
         }
 
-        records.forEach(student => {
+        list.forEach(student => {
             const tr = document.createElement('tr');
             tr.className = 'clickable';
-            tr.addEventListener('click', () => showDetails(student, source));
+            tr.addEventListener('click', () =>
+                showDetails(student, 'My Records (' + (student.source || 'Local') + ')'));
 
             [student.id, student.student_id, student.name,
              student.program, student.year, student.section].forEach(value => {
@@ -377,65 +430,36 @@
                 tr.appendChild(td);
             });
 
-            if (withActions) {
-                const actions = document.createElement('td');
-                actions.className = 'actions';
+            const sourceCell = document.createElement('td');
+            sourceCell.appendChild(sourceBadge(student.source));
+            tr.appendChild(sourceCell);
 
-                const editBtn = document.createElement('button');
-                editBtn.className = 'chip small';
-                editBtn.textContent = 'Edit';
-                editBtn.addEventListener('click', e => {
-                    e.stopPropagation();
-                    startEdit(student);
-                });
+            const actions = document.createElement('td');
+            actions.className = 'actions';
 
-                const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'danger small';
-                deleteBtn.textContent = 'Delete';
-                deleteBtn.addEventListener('click', e => {
-                    e.stopPropagation();
-                    deleteStudent(student.id);
-                });
+            const editBtn = document.createElement('button');
+            editBtn.className = 'chip small';
+            editBtn.textContent = 'Edit';
+            editBtn.addEventListener('click', e => {
+                e.stopPropagation();
+                startEdit(student);
+            });
 
-                actions.append(editBtn, deleteBtn);
-                tr.appendChild(actions);
-            }
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'danger small';
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.addEventListener('click', e => {
+                e.stopPropagation();
+                deleteStudent(student.id);
+            });
 
+            actions.append(editBtn, deleteBtn);
+            tr.appendChild(actions);
             body.appendChild(tr);
         });
     }
 
-    // MY RECORDS: Read
-    function loadMyRecords() {
-        showRow('studentBody', 7, 'Loading records...', false);
-
-        let url = '/students';
-        if (currentFilter !== 'all') {
-            const [type, value] = currentFilter.split(':');
-            url = '/students/' + type + '/' + encodeURIComponent(value);
-        }
-
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                if (!Array.isArray(data)) {
-                    showRow('studentBody', 7, data.error || 'Unable to retrieve records.', true);
-                    return;
-                }
-                myRecords = data;
-                renderMy();
-            })
-            .catch(() => showRow('studentBody', 7, 'Unable to retrieve records.', true));
-    }
-
-    function renderMy() {
-        const query = document.getElementById('mySearch').value.trim().toLowerCase();
-        const list = query ? myRecords.filter(s => matches(s, query)) : myRecords;
-        renderTable('studentBody', list, 'My Records (local database)', true);
-        setText('statCount', myRecords.length);
-    }
-
-    // MY RECORDS: Create and Update
+    // MY RECORDS: Create and Update (always saved as Local)
     function clearForm() {
         document.getElementById('newStudentId').value = '';
         document.getElementById('newName').value = '';
@@ -450,7 +474,8 @@
             name: document.getElementById('newName').value.trim(),
             program: document.getElementById('newProgram').value,
             year: document.getElementById('newYear').value,
-            section: document.getElementById('newSection').value
+            section: document.getElementById('newSection').value,
+            source: 'Local'
         };
 
         if (!studentData.student_id || !studentData.name) {
@@ -503,9 +528,9 @@
         document.getElementById('cancelBtn').classList.add('hidden');
     }
 
-    // MY RECORDS: Delete
+    // MY RECORDS: Delete (local database only)
     function deleteStudent(id) {
-        if (!confirm('Delete this student?')) return;
+        if (!confirm('Delete this student from your database?')) return;
 
         fetch('/api/students/' + id, { method: 'DELETE' })
             .then(response => response.json())
@@ -516,34 +541,112 @@
             .catch(() => setText('addResult', 'Unable to delete student.'));
     }
 
-    // CLASSMATE RECORDS: Read-only
-    function loadClassmate() {
-        const url = document.getElementById('classmateUrl').value.trim();
-        if (!url) {
-            showRow('classmateBody', 6, 'Enter a classmate\'s API URL first.', true);
-            return;
-        }
+    // PARTNER RECORDS: Read-only view
+    function loadPartner() {
+        showRow('partnerBody', 7, 'Loading partner records...', false);
 
-        showRow('classmateBody', 6, 'Loading classmate records...', false);
-
-        fetch('/api/classmate?url=' + encodeURIComponent(url))
+        fetch('/partner-records')
             .then(response => response.json())
             .then(data => {
                 if (!Array.isArray(data)) {
-                    showRow('classmateBody', 6, data.error || 'Unable to retrieve classmate records.', true);
+                    showRow('partnerBody', 7, data.error || 'Unable to retrieve partner records.', true);
                     return;
                 }
-                classmateRecords = data;
-                renderClassmate();
+                partnerRecords = data;
+                renderPartner();
             })
-            .catch(() => showRow('classmateBody', 6, 'Unable to retrieve classmate records.', true));
+            .catch(() => showRow('partnerBody', 7, 'Unable to retrieve partner records.', true));
     }
 
-    function renderClassmate() {
-        const query = document.getElementById('classmateSearch').value.trim().toLowerCase();
-        const list = query ? classmateRecords.filter(s => matches(s, query)) : classmateRecords;
-        renderTable('classmateBody', list, "Classmate's Records (read-only)", false);
-        setText('statClassmate', classmateRecords.length);
+    function renderPartner() {
+        const query = document.getElementById('partnerSearch').value.trim().toLowerCase();
+        const list = query ? partnerRecords.filter(s => matches(s, query)) : partnerRecords;
+        const body = document.getElementById('partnerBody');
+        body.replaceChildren();
+
+        setText('statPartner', partnerRecords.length);
+
+        if (list.length === 0) {
+            showRow('partnerBody', 7, 'No partner records found.', false);
+            return;
+        }
+
+        list.forEach(student => {
+            const tr = document.createElement('tr');
+            tr.className = 'clickable';
+            tr.addEventListener('click', () => showDetails(student, "Partner Records (partner's API)"));
+
+            [student.id, student.student_id, student.name,
+             student.program, student.year, student.section].forEach(value => {
+                const td = document.createElement('td');
+                td.textContent = value == null ? '' : String(value);
+                tr.appendChild(td);
+            });
+
+            const actions = document.createElement('td');
+            actions.className = 'actions';
+
+            const viewBtn = document.createElement('button');
+            viewBtn.className = 'chip small';
+            viewBtn.textContent = 'View';
+            viewBtn.addEventListener('click', e => {
+                e.stopPropagation();
+                showDetails(student, "Partner Records (partner's API)");
+            });
+
+            const saveBtn = document.createElement('button');
+            saveBtn.className = 'small';
+            saveBtn.textContent = 'Save to My Database';
+            saveBtn.addEventListener('click', e => {
+                e.stopPropagation();
+                saveToMyDatabase(student);
+            });
+
+            actions.append(viewBtn, saveBtn);
+            tr.appendChild(actions);
+            body.appendChild(tr);
+        });
+    }
+
+    // PARTNER RECORDS: Save a copy into my own database
+    function saveToMyDatabase(student) {
+        const payload = {
+            student_id: student.student_id,
+            name: student.name,
+            program: student.program,
+            year: student.year,
+            section: student.section
+        };
+
+        fetch('/import-student', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+            .then(response => response.json())
+            .then(data => {
+                setText('partnerResult', (data.message || 'Saved.') + ' Source: Classmate API.');
+                loadMyRecords();
+            })
+            .catch(() => setText('partnerResult', 'Unable to save record.'));
+    }
+
+    // SEND: Practice record to the partner's POST endpoint
+    function sendToPartner() {
+        if (!confirm('Send the practice record to your partner?')) return;
+
+        setText('sendResult', 'Sending practice record...');
+
+        fetch('/send-to-partner', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    setText('sendResult', data.error);
+                    return;
+                }
+                setText('sendResult', 'Partner responded with status ' + data.status + ': ' + data.response);
+            })
+            .catch(() => setText('sendResult', 'Unable to send record.'));
     }
 
     // Practice endpoints
