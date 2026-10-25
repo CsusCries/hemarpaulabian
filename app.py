@@ -4,8 +4,9 @@ from flask import Flask, jsonify, request, render_template
 
 app = Flask(__name__)
 
-# Lab 9: replace with your partner's deployed /api/students URL
-PARTNER_URL = "https://jadewarrencasas-1.onrender.com/students"
+# Lab 9: partner's deployed API addresses
+PARTNER_READ_URL = "https://jadewarrencasas-1.onrender.com/students"
+PARTNER_POST_URL = "https://jadewarrencasas-1.onrender.com/api/students"
 
 
 def get_db_connection():
@@ -202,11 +203,11 @@ def delete_student(id):
     return jsonify({"message": "Student deleted"})
 
 
-# Lab 9: retrieve the partner's records on the server side
+# Lab 9: retrieve the partner's records on the server side (read-only)
 @app.route('/partner-records')
 def partner_records():
     try:
-        response = requests.get(PARTNER_URL, timeout=15)
+        response = requests.get(PARTNER_READ_URL, timeout=15)
         response.raise_for_status()
         return jsonify(response.json())
     except (requests.RequestException, ValueError):
@@ -242,7 +243,7 @@ def send_to_partner():
         "source": "Partner API"
     }
     try:
-        response = requests.post(PARTNER_URL, json=record, timeout=15)
+        response = requests.post(PARTNER_POST_URL, json=record, timeout=15)
         return jsonify({"status": response.status_code, "response": response.text})
     except requests.RequestException:
         return jsonify({"error": "Unable to send record to partner."}), 502
