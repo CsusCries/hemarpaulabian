@@ -15,248 +15,113 @@
             --accent: #315b96;
             --accent-hover: #1d3f70;
             --accent-soft: #e6eefb;
+            --danger: #a32d2d;
             --radius: 8px;
         }
-
         * { box-sizing: border-box; }
-
         body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.5;
+            margin: 0; font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg); color: var(--text); line-height: 1.5;
         }
-
-        .container {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 32px 20px 48px;
-        }
-
+        .container { max-width: 1000px; margin: 0 auto; padding: 32px 20px 48px; }
         header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 12px; margin-bottom: 24px;
         }
-
-        header h1 {
-            margin: 0;
-            font-size: 22px;
-            color: #243b64;
-        }
-
-        header p {
-            margin: 2px 0 0;
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .status {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
+        header h1 { margin: 0; font-size: 22px; color: #243b64; }
+        header p { margin: 2px 0 0; font-size: 13px; color: var(--text-muted); }
+        .status { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-muted); }
         .status::before {
-            content: "";
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #3b9b5b;
+            content: ""; width: 8px; height: 8px; border-radius: 50%; background: #3b9b5b;
         }
-
         .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px; margin-bottom: 20px;
         }
-
         .stat {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 16px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 16px;
         }
-
-        .stat-label {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #243b64;
-            margin-top: 4px;
-        }
-
+        .stat-label { font-size: 13px; color: var(--text-muted); }
+        .stat-value { font-size: 24px; font-weight: bold; color: #243b64; margin-top: 4px; }
         .cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 16px;
-            margin-bottom: 20px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px; margin-bottom: 20px;
         }
-
         .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 18px;
-            display: flex;
-            flex-direction: column;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: 18px; display: flex; flex-direction: column;
         }
-
-        .card h2 {
-            margin: 0 0 4px;
-            font-size: 16px;
-            color: #243b64;
-        }
-
-        .card > p {
-            margin: 0 0 12px;
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .row {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: auto;
-        }
-
-        button {
-            padding: 9px 14px;
-            cursor: pointer;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        button:hover { background: var(--accent-hover); }
-
-        button.chip {
-            background: var(--surface);
-            color: var(--accent);
-            border: 1px solid var(--border);
-            padding: 7px 12px;
-            font-size: 13px;
-        }
-
-        button.chip:hover { background: var(--accent-soft); }
-
-        button.chip.active {
-            background: var(--accent);
-            color: #fff;
-            border-color: var(--accent);
-        }
-
-        input {
-            flex: 1;
-            min-width: 140px;
-            padding: 9px 10px;
-            font-size: 14px;
-            border: 1px solid #c8d0dc;
-            border-radius: 6px;
-            background: #fff;
-        }
-
-        input:focus {
-            outline: 2px solid var(--accent-soft);
-            border-color: var(--accent);
-        }
-
+        .card h2, .panel h2 { margin: 0 0 4px; font-size: 16px; color: #243b64; }
+        .card > p { margin: 0 0 12px; font-size: 13px; color: var(--text-muted); }
+        .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; align-items: center; }
         .panel {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 20px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: 18px; margin-bottom: 20px;
         }
-
-        .panel h2 {
-            margin: 0 0 12px;
-            font-size: 16px;
-            color: #243b64;
+        .panel-head { margin-bottom: 12px; }
+        .source-label {
+            display: inline-block; font-size: 12px; padding: 3px 8px; border-radius: 4px;
+            background: var(--accent-soft); color: var(--accent); margin-top: 4px;
         }
-
+        .source-label.readonly { background: #f1efe8; color: #5f5e5a; }
+        button {
+            padding: 9px 14px; cursor: pointer; background: var(--accent); color: #fff;
+            border: none; border-radius: 6px; font-size: 14px;
+        }
+        button:hover { background: var(--accent-hover); }
+        button.chip {
+            background: var(--surface); color: var(--accent);
+            border: 1px solid var(--border); padding: 6px 12px; font-size: 13px;
+        }
+        button.chip:hover { background: var(--accent-soft); }
+        button.chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+        button.danger {
+            background: var(--surface); color: var(--danger);
+            border: 1px solid var(--border); padding: 6px 12px; font-size: 13px;
+        }
+        button.danger:hover { background: #fbeaea; }
+        button.small { padding: 6px 10px; font-size: 13px; }
+        input, select {
+            flex: 1; min-width: 140px; padding: 9px 10px; font-size: 14px;
+            border: 1px solid #c8d0dc; border-radius: 6px; background: #fff; color: var(--text);
+        }
+        input:focus, select:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
+        .form-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;
+        }
+        .form-grid input, .form-grid select { width: 100%; }
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+        .search { width: 100%; margin-bottom: 12px; }
         .result {
-            margin-top: 14px;
-            padding: 12px 14px;
-            background: var(--surface-muted);
-            border-left: 4px solid var(--accent);
-            border-radius: 4px;
-            font-size: 14px;
-            overflow-wrap: anywhere;
+            margin-top: 14px; padding: 12px 14px; background: var(--surface-muted);
+            border-left: 4px solid var(--accent); border-radius: 4px;
+            font-size: 14px; overflow-wrap: anywhere;
         }
-
         .result p { margin: 4px 0; }
-
         .result:empty { display: none; }
-
-        .muted {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin: 0;
-        }
-
-        .chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 14px;
-        }
-
-        .table-wrap {
-            overflow-x: auto;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        th, td {
-            padding: 10px 12px;
-            text-align: left;
-            white-space: nowrap;
-        }
-
+        .muted { color: var(--text-muted); font-size: 14px; margin: 0; }
+        .error { color: var(--danger); }
+        .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { padding: 10px 12px; text-align: left; white-space: nowrap; }
         thead th {
-            background: #f7f9fc;
-            color: var(--text-muted);
-            font-weight: bold;
-            font-size: 13px;
-            border-bottom: 1px solid var(--border);
+            background: #f7f9fc; color: var(--text-muted); font-weight: bold;
+            font-size: 13px; border-bottom: 1px solid var(--border);
         }
-
-        tbody td {
-            border-top: 1px solid var(--border);
-        }
-
+        tbody td { border-top: 1px solid var(--border); }
         tbody tr:first-child td { border-top: none; }
-
-        tbody tr:hover td { background: #fafbfd; }
-
-        .error {
-            color: #a32d2d;
+        tbody tr.clickable { cursor: pointer; }
+        tbody tr.clickable:hover td { background: #fafbfd; }
+        td.actions { display: flex; gap: 6px; }
+        .details {
+            display: grid; grid-template-columns: max-content 1fr;
+            gap: 6px 16px; margin: 0 0 12px; font-size: 14px;
         }
-
-        @media (max-width: 600px) {
-            .container { padding: 20px 14px 36px; }
-        }
+        .details dt { color: var(--text-muted); text-transform: capitalize; }
+        .details dd { margin: 0; overflow-wrap: anywhere; }
+        .hidden { display: none; }
+        @media (max-width: 600px) { .container { padding: 20px 14px 36px; } }
     </style>
 </head>
 <body>
@@ -272,16 +137,16 @@
 
     <div class="stats">
         <div class="stat">
-            <div class="stat-label">Students loaded</div>
+            <div class="stat-label">My records</div>
             <div class="stat-value" id="statCount">&mdash;</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Classmate records</div>
+            <div class="stat-value" id="statClassmate">&mdash;</div>
         </div>
         <div class="stat">
             <div class="stat-label">Programs</div>
             <div class="stat-value">2</div>
-        </div>
-        <div class="stat">
-            <div class="stat-label">Sections</div>
-            <div class="stat-value">3</div>
         </div>
     </div>
 
@@ -316,21 +181,93 @@
         </div>
     </div>
 
+    <!-- MY RECORDS: Create and Update -->
     <div class="panel">
-        <h2>Students</h2>
+        <div class="panel-head">
+            <h2 id="formTitle">Add student</h2>
+            <span class="source-label">Source: My Records (local database)</span>
+        </div>
+        <div class="form-grid">
+            <input type="text" id="newStudentId" placeholder="Student ID (e.g. 24-00200)">
+            <input type="text" id="newName" placeholder="Full name">
+            <select id="newProgram">
+                <option value="BSIT">BSIT</option>
+                <option value="BSCS">BSCS</option>
+            </select>
+            <select id="newYear">
+                <option value="1">1st Year</option>
+                <option value="2">2nd Year</option>
+                <option value="3">3rd Year</option>
+                <option value="4">4th Year</option>
+            </select>
+            <select id="newSection">
+                <option value="A">Section A</option>
+                <option value="B">Section B</option>
+                <option value="C">Section C</option>
+            </select>
+        </div>
+        <div class="row" style="margin-top:12px;">
+            <button id="saveBtn" onclick="saveStudent()">Add student</button>
+            <button id="cancelBtn" class="chip hidden" onclick="cancelEdit()">Cancel</button>
+        </div>
+        <div id="addResult" class="result"></div>
+    </div>
+
+    <!-- MY RECORDS: Read, Delete, Search -->
+    <div class="panel">
+        <div class="panel-head">
+            <h2>My Records</h2>
+            <span class="source-label">Source: local database</span>
+        </div>
 
         <div class="chips" id="filterChips">
-            <button class="chip active" onclick="setFilter(this, loadStudents)">All</button>
-            <button class="chip" onclick="setFilter(this, () => filterByProgram('BSIT'))">BSIT</button>
-            <button class="chip" onclick="setFilter(this, () => filterByProgram('BSCS'))">BSCS</button>
-            <button class="chip" onclick="setFilter(this, () => filterByYear('1'))">Year 1</button>
-            <button class="chip" onclick="setFilter(this, () => filterByYear('2'))">Year 2</button>
-            <button class="chip" onclick="setFilter(this, () => filterByYear('3'))">Year 3</button>
-            <button class="chip" onclick="setFilter(this, () => filterByYear('4'))">Year 4</button>
-            <button class="chip" onclick="setFilter(this, () => filterBySection('A'))">Section A</button>
-            <button class="chip" onclick="setFilter(this, () => filterBySection('B'))">Section B</button>
-            <button class="chip" onclick="setFilter(this, () => filterBySection('C'))">Section C</button>
+            <button class="chip active" onclick="setFilter(this, 'all')">All</button>
+            <button class="chip" onclick="setFilter(this, 'program:BSIT')">BSIT</button>
+            <button class="chip" onclick="setFilter(this, 'program:BSCS')">BSCS</button>
+            <button class="chip" onclick="setFilter(this, 'year:1')">Year 1</button>
+            <button class="chip" onclick="setFilter(this, 'year:2')">Year 2</button>
+            <button class="chip" onclick="setFilter(this, 'year:3')">Year 3</button>
+            <button class="chip" onclick="setFilter(this, 'year:4')">Year 4</button>
+            <button class="chip" onclick="setFilter(this, 'section:A')">Section A</button>
+            <button class="chip" onclick="setFilter(this, 'section:B')">Section B</button>
+            <button class="chip" onclick="setFilter(this, 'section:C')">Section C</button>
         </div>
+
+        <input type="text" id="mySearch" class="search" placeholder="Search my records" oninput="renderMy()">
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Database ID</th>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Program</th>
+                        <th>Year</th>
+                        <th>Section</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="studentBody">
+                    <tr><td colspan="7" class="muted">Loading records...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- CLASSMATE RECORDS: Read-only -->
+    <div class="panel">
+        <div class="panel-head">
+            <h2>Classmate's Records</h2>
+            <span class="source-label readonly">Source: classmate's API (read-only)</span>
+        </div>
+
+        <div class="row" style="margin-bottom:12px;">
+            <input type="text" id="classmateUrl" placeholder="https://CLASSMATE-APP.onrender.com/api/students">
+            <button onclick="loadClassmate()">Load classmate records</button>
+        </div>
+
+        <input type="text" id="classmateSearch" class="search" placeholder="Search classmate records" oninput="renderClassmate()">
 
         <div class="table-wrap">
             <table>
@@ -344,27 +281,272 @@
                         <th>Section</th>
                     </tr>
                 </thead>
-                <tbody id="studentBody">
-                    <tr><td colspan="6" class="muted">Choose a filter or press "All" to load records.</td></tr>
+                <tbody id="classmateBody">
+                    <tr><td colspan="6" class="muted">Enter a classmate's API URL and load their records.</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
+    <!-- DETAILS -->
+    <div class="panel hidden" id="detailsPanel">
+        <div class="panel-head">
+            <h2>Record details</h2>
+            <span class="source-label" id="detailSource"></span>
+        </div>
+        <dl class="details" id="detailList"></dl>
+        <button class="chip" onclick="closeDetails()">Close</button>
+    </div>
+
 </div>
 
 <script>
-    function setFilter(button, action) {
-        document.querySelectorAll('#filterChips .chip')
-            .forEach(chip => chip.classList.remove('active'));
-        button.classList.add('active');
-        action();
-    }
+    let myRecords = [];
+    let classmateRecords = [];
+    let currentFilter = 'all';
+    let editingId = null;
 
     function setText(id, text) {
         document.getElementById(id).textContent = text;
     }
 
+    function setFilter(button, filter) {
+        document.querySelectorAll('#filterChips .chip')
+            .forEach(chip => chip.classList.remove('active'));
+        button.classList.add('active');
+        currentFilter = filter;
+        loadMyRecords();
+    }
+
+    function matches(student, query) {
+        return Object.values(student).some(v =>
+            String(v == null ? '' : v).toLowerCase().includes(query));
+    }
+
+    function showRow(bodyId, cols, message, isError) {
+        const body = document.getElementById(bodyId);
+        body.replaceChildren();
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = cols;
+        td.className = isError ? 'error' : 'muted';
+        td.textContent = message;
+        tr.appendChild(td);
+        body.appendChild(tr);
+    }
+
+    function showDetails(record, source) {
+        const list = document.getElementById('detailList');
+        list.replaceChildren();
+        Object.entries(record).forEach(([key, value]) => {
+            const dt = document.createElement('dt');
+            dt.textContent = key.replace(/_/g, ' ');
+            const dd = document.createElement('dd');
+            dd.textContent = value == null ? '' : String(value);
+            list.append(dt, dd);
+        });
+        setText('detailSource', source);
+        const panel = document.getElementById('detailsPanel');
+        panel.classList.remove('hidden');
+        panel.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function closeDetails() {
+        document.getElementById('detailsPanel').classList.add('hidden');
+    }
+
+    function renderTable(bodyId, records, source, withActions) {
+        const body = document.getElementById(bodyId);
+        const cols = withActions ? 7 : 6;
+        body.replaceChildren();
+
+        if (records.length === 0) {
+            showRow(bodyId, cols, 'No students found.', false);
+            return;
+        }
+
+        records.forEach(student => {
+            const tr = document.createElement('tr');
+            tr.className = 'clickable';
+            tr.addEventListener('click', () => showDetails(student, source));
+
+            [student.id, student.student_id, student.name,
+             student.program, student.year, student.section].forEach(value => {
+                const td = document.createElement('td');
+                td.textContent = value == null ? '' : String(value);
+                tr.appendChild(td);
+            });
+
+            if (withActions) {
+                const actions = document.createElement('td');
+                actions.className = 'actions';
+
+                const editBtn = document.createElement('button');
+                editBtn.className = 'chip small';
+                editBtn.textContent = 'Edit';
+                editBtn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    startEdit(student);
+                });
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'danger small';
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    deleteStudent(student.id);
+                });
+
+                actions.append(editBtn, deleteBtn);
+                tr.appendChild(actions);
+            }
+
+            body.appendChild(tr);
+        });
+    }
+
+    // MY RECORDS: Read
+    function loadMyRecords() {
+        showRow('studentBody', 7, 'Loading records...', false);
+
+        let url = '/students';
+        if (currentFilter !== 'all') {
+            const [type, value] = currentFilter.split(':');
+            url = '/students/' + type + '/' + encodeURIComponent(value);
+        }
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (!Array.isArray(data)) {
+                    showRow('studentBody', 7, data.error || 'Unable to retrieve records.', true);
+                    return;
+                }
+                myRecords = data;
+                renderMy();
+            })
+            .catch(() => showRow('studentBody', 7, 'Unable to retrieve records.', true));
+    }
+
+    function renderMy() {
+        const query = document.getElementById('mySearch').value.trim().toLowerCase();
+        const list = query ? myRecords.filter(s => matches(s, query)) : myRecords;
+        renderTable('studentBody', list, 'My Records (local database)', true);
+        setText('statCount', myRecords.length);
+    }
+
+    // MY RECORDS: Create and Update
+    function clearForm() {
+        document.getElementById('newStudentId').value = '';
+        document.getElementById('newName').value = '';
+        document.getElementById('newProgram').value = 'BSIT';
+        document.getElementById('newYear').value = '1';
+        document.getElementById('newSection').value = 'A';
+    }
+
+    function saveStudent() {
+        const studentData = {
+            student_id: document.getElementById('newStudentId').value.trim(),
+            name: document.getElementById('newName').value.trim(),
+            program: document.getElementById('newProgram').value,
+            year: document.getElementById('newYear').value,
+            section: document.getElementById('newSection').value
+        };
+
+        if (!studentData.student_id || !studentData.name) {
+            setText('addResult', 'Student ID and name are required.');
+            return;
+        }
+
+        const isEdit = editingId !== null;
+        const url = isEdit ? '/api/students/' + editingId : '/api/students';
+        const method = isEdit ? 'PUT' : 'POST';
+
+        fetch(url, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(studentData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                setText('addResult', data.message || 'Saved.');
+                if (isEdit) {
+                    cancelEdit();
+                } else {
+                    clearForm();
+                }
+                loadMyRecords();
+            })
+            .catch(() => setText('addResult', 'Unable to save student.'));
+    }
+
+    function startEdit(student) {
+        editingId = student.id;
+        document.getElementById('newStudentId').value = student.student_id;
+        document.getElementById('newName').value = student.name;
+        document.getElementById('newProgram').value = student.program;
+        document.getElementById('newYear').value = String(student.year);
+        document.getElementById('newSection').value = student.section;
+
+        setText('formTitle', 'Edit student');
+        document.getElementById('saveBtn').textContent = 'Save changes';
+        document.getElementById('cancelBtn').classList.remove('hidden');
+        setText('addResult', '');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelEdit() {
+        editingId = null;
+        clearForm();
+        setText('formTitle', 'Add student');
+        document.getElementById('saveBtn').textContent = 'Add student';
+        document.getElementById('cancelBtn').classList.add('hidden');
+    }
+
+    // MY RECORDS: Delete
+    function deleteStudent(id) {
+        if (!confirm('Delete this student?')) return;
+
+        fetch('/api/students/' + id, { method: 'DELETE' })
+            .then(response => response.json())
+            .then(data => {
+                setText('addResult', data.message || 'Student deleted.');
+                loadMyRecords();
+            })
+            .catch(() => setText('addResult', 'Unable to delete student.'));
+    }
+
+    // CLASSMATE RECORDS: Read-only
+    function loadClassmate() {
+        const url = document.getElementById('classmateUrl').value.trim();
+        if (!url) {
+            showRow('classmateBody', 6, 'Enter a classmate\'s API URL first.', true);
+            return;
+        }
+
+        showRow('classmateBody', 6, 'Loading classmate records...', false);
+
+        fetch('/api/classmate?url=' + encodeURIComponent(url))
+            .then(response => response.json())
+            .then(data => {
+                if (!Array.isArray(data)) {
+                    showRow('classmateBody', 6, data.error || 'Unable to retrieve classmate records.', true);
+                    return;
+                }
+                classmateRecords = data;
+                renderClassmate();
+            })
+            .catch(() => showRow('classmateBody', 6, 'Unable to retrieve classmate records.', true));
+    }
+
+    function renderClassmate() {
+        const query = document.getElementById('classmateSearch').value.trim().toLowerCase();
+        const list = query ? classmateRecords.filter(s => matches(s, query)) : classmateRecords;
+        renderTable('classmateBody', list, "Classmate's Records (read-only)", false);
+        setText('statClassmate', classmateRecords.length);
+    }
+
+    // Practice endpoints
     function loadStudent() {
         fetch('/student')
             .then(response => response.json())
@@ -381,8 +563,7 @@
                     const p = document.createElement('p');
                     const b = document.createElement('b');
                     b.textContent = label + ': ';
-                    p.appendChild(b);
-                    p.appendChild(document.createTextNode(value == null ? '' : String(value)));
+                    p.append(b, document.createTextNode(value == null ? '' : String(value)));
                     el.appendChild(p);
                 });
             })
@@ -421,77 +602,14 @@
                     const p = document.createElement('p');
                     const b = document.createElement('b');
                     b.textContent = label + ': ';
-                    p.appendChild(b);
-                    p.appendChild(document.createTextNode(value == null ? '' : String(value)));
+                    p.append(b, document.createTextNode(value == null ? '' : String(value)));
                     el.appendChild(p);
                 });
             })
             .catch(() => setText('food-result', 'Unable to retrieve favorite food.'));
     }
 
-    function renderStudents(data) {
-        const body = document.getElementById('studentBody');
-        body.replaceChildren();
-
-        if (!Array.isArray(data)) {
-            showMessage(data.error || 'Unable to retrieve student records.', true);
-            return;
-        }
-
-        if (data.length === 0) {
-            showMessage('No students found.', false);
-            return;
-        }
-
-        data.forEach(student => {
-            const tr = document.createElement('tr');
-            [student.id, student.student_id, student.name,
-             student.program, student.year, student.section].forEach(value => {
-                const td = document.createElement('td');
-                td.textContent = value == null ? '' : String(value);
-                tr.appendChild(td);
-            });
-            body.appendChild(tr);
-        });
-
-        setText('statCount', data.length);
-    }
-
-    function showMessage(message, isError) {
-        const body = document.getElementById('studentBody');
-        body.replaceChildren();
-        const tr = document.createElement('tr');
-        const td = document.createElement('td');
-        td.colSpan = 6;
-        td.className = isError ? 'error' : 'muted';
-        td.textContent = message;
-        tr.appendChild(td);
-        body.appendChild(tr);
-    }
-
-    function fetchStudents(url) {
-        showMessage('Loading students...', false);
-        fetch(url)
-            .then(response => response.json())
-            .then(renderStudents)
-            .catch(() => showMessage('Unable to retrieve student records.', true));
-    }
-
-    function loadStudents() {
-        fetchStudents('/students');
-    }
-
-    function filterByProgram(program) {
-        fetchStudents('/students/program/' + encodeURIComponent(program));
-    }
-
-    function filterByYear(year) {
-        fetchStudents('/students/year/' + encodeURIComponent(year));
-    }
-
-    function filterBySection(section) {
-        fetchStudents('/students/section/' + encodeURIComponent(section));
-    }
+    loadMyRecords();
 </script>
 </body>
 </html>

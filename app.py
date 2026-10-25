@@ -1,4 +1,6 @@
 import sqlite3
+import urllib.request
+from urllib.parse import urlparse
 from flask import Flask, jsonify, request, render_template
 
 app = Flask(__name__)
@@ -58,15 +60,12 @@ def get_hobbies():
     })
 
 
-# Display all students
+# Display all students (used by the filter and search views)
 @app.route('/students')
 def get_students():
     conn = get_db_connection()
-    students = conn.execute(
-        'SELECT * FROM students'
-    ).fetchall()
+    students = conn.execute('SELECT * FROM students').fetchall()
     conn.close()
-
     return jsonify([dict(student) for student in students])
 
 
@@ -109,7 +108,6 @@ def get_students_by_program(program):
         (program.upper(),)
     ).fetchall()
     conn.close()
-
     return jsonify([dict(student) for student in students])
 
 
@@ -118,11 +116,9 @@ def get_students_by_program(program):
 def get_students_by_year(year):
     conn = get_db_connection()
     students = conn.execute(
-        'SELECT * FROM students WHERE year = ?',
-        (year,)
+        'SELECT * FROM students WHERE year = ?', (year,)
     ).fetchall()
     conn.close()
-
     return jsonify([dict(student) for student in students])
 
 
@@ -135,13 +131,18 @@ def get_students_by_section(section):
         (section.upper(),)
     ).fetchall()
     conn.close()
-
     return jsonify([dict(student) for student in students])
 
 
-# Add a new student
-@app.route('/api/students', methods=['POST'])
-def add_student():
+# Lab 8: list all records as JSON (GET) and add a record (POST)
+@app.route('/api/students', methods=['GET', 'POST'])
+def api_students():
+    if request.method == 'GET':
+        conn = get_db_connection()
+        rows = conn.execute('SELECT * FROM students').fetchall()
+        conn.close()
+        return jsonify([dict(row) for row in rows])
+
     data = request.get_json()
     conn = get_db_connection()
     cursor = conn.execute(
@@ -196,6 +197,21 @@ def delete_student(id):
     conn.commit()
     conn.close()
     return jsonify({"message": "Student deleted"})
+
+
+# Lab 8: read-only proxy for a classmate's API (avoids browser CORS limits)
+@app.route('/api/classmate')
+def classmate_proxy():
+    url = request.args.get('url', '')
+    parsed = urlparse(url)
+    if parsed.scheme != 'https' or not parsed.netloc:
+        return jsonify({"error": "Enter a valid https:// API URL."}), 400
+    try:
+        with urllib.request.urlopen(url, timeout=15) as resp:
+            body = resp.read()
+        return app.response_class(body, mimetype='application/json')
+    except Exception:
+        return jsonify({"error": "Could not reach that API."}), 502
 
 
 if __name__ == '__main__':
