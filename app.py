@@ -1,8 +1,14 @@
 import sqlite3
 import requests
+import os
 from flask import Flask, jsonify, request, render_template
 
+from gwa import bp as gwa_bp, init_db as init_gwa_db
+
 app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY', 'dev-change-me')
+app.register_blueprint(gwa_bp)
+init_gwa_db()
 
 # Lab 9: partner's deployed API addresses
 PARTNER_READ_URL = "https://jadewarrencasas-1.onrender.com/students"
@@ -15,9 +21,10 @@ def get_db_connection():
     return conn
 
 
-@app.route('/')
+# Original lab page (the GWA admin portal now lives at /)
+@app.route('/lab')
 def home():
-    return render_template('index.html')
+    return render_template('lab.html')
 
 
 # Original Student API
