@@ -251,3 +251,7 @@ def send_to_partner():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+# Lab 10 AWS deployment update
